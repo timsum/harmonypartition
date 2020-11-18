@@ -6,6 +6,7 @@
 
 import numpy as np
 import pt_utils
+import pt_keypattern
 
 
 ACCIDENTALS = ["FB", "b", "", "#", "x"]
@@ -305,6 +306,20 @@ def conv_tonic_name_for_kpdve(kpdve):
     conv_kpdve = pt_utils.kpdve_add(kpdve, pt_utils.conv_d_distortion_vec_for_p(kpdve[1]))
     conv_tonic = np.array([conv_kpdve[0], conv_kpdve[1], pt_utils.CONVENTION_DIST[kpdve[1]], 0, 0])
     return note_name_for_kpdve(conv_tonic)
+
+# text descriptions for state (first more visual, second more verbal.)
+def kpdve_stream_string(kpdve):
+    '''
+    info optimized for seeing terminal process.
+    '''
+
+    description_string = format(pt_keypattern.get_binary_KP(kpdve[0], kpdve[1]), "b").zfill(12) + " : " 
+    description_string += conv_tonic_name_for_kpdve(kpdve) + " " + PATTERN_CONVENTIONAL_NAMES[kpdve[1]]
+    description_string += " ================== "
+    description_string += format(pt_keypattern.get_binary_KPDVE_chord(kpdve), "b").zfill(12) + " : " + chord_root_name_for_KPDVE(kpdve)
+    description_string += " as "  + chord_function_in_key(kpdve)
+
+    return description_string
 
 
 def kpdve_description_info(kpdve):

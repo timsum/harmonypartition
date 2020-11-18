@@ -34,7 +34,7 @@ class harmony_state():
     '''
 
 
-    def __init__(self, start_kpdve=np.array([1, 0, 0, 4, 2])):
+    def __init__(self, start_kpdve=np.array([0, 0, 0, 4, 2])):
         self.start_kpdve = start_kpdve
         self.current_kpdve = start_kpdve
         self.current_binary = partita.chord_for_KPDVE_input(self.current_kpdve)
@@ -82,6 +82,7 @@ class harmony_state():
         # self.build_context()
         
         return True
+
 
     def change_notegroup(self, notegroup):
         '''
@@ -145,7 +146,7 @@ class harmony_state():
         -------
         String
         '''
-        return pt_naming_conventions.kpdve_description_info(self.current_kpdve)
+        return pt_naming_conventions.kpdve_stream_string(self.current_kpdve)
     # access to useful note vals in a range...
         
     # STANDARD MANIPULATIONS FOR NAVIGATING THE STATE AS A PLAYER...
