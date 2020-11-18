@@ -1,0 +1,14 @@
+README.md
+setup.py
+src/harmony_state.py
+src/partita.py
+src/pt_datafiles.py
+src/pt_keypattern.py
+src/pt_kpdve_list_optimize.py
+src/pt_musicutils.py
+src/pt_naming_conventions.py
+src/pt_utils.py
+src/harmonypartition.egg-info/PKG-INFO
+src/harmonypartition.egg-info/SOURCES.txt
+src/harmonypartition.egg-info/dependency_links.txt
+src/harmonypartition.egg-info/top_level.txt

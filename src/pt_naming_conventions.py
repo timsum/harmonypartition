@@ -282,24 +282,11 @@ def chord_function_in_key(kpdve):
     '''
     
     conv_kpdve = pt_utils.kpdve_add(kpdve, pt_utils.conv_d_distortion_vec_for_p(kpdve[1]))
-    conv_tonic = np.array([conv_kpdve[0], conv_kpdve[1], pt_utils.CONVENTION_DIST[kpdve[1]], 0, 0])
     
     # get the chord roman numeral
     chord_numeral = '{:>3}'.format(MODE_NUMERALS[conv_kpdve[2]])
     
-    root_name =  '{:>2}'.format(chord_root_name_for_KPDVE(kpdve))
-    
-    # get the name of the conventional tonic
-    # mode_name = note_name_for_kpdve(conv_tonic)
-    # mode_name += " "
-    # mode_name += PATTERN_CONVENTIONAL_NAMES[conv_kpdve[1]]
-    # mode_name = '{:>3}'.format(mode_name) 
-    
-    # core_name = "(core: "
-    # core_name += note_name_for_kpdve([(kpdve[0] + 1) % 12, 0, 0, 0, 0])
-    # core_name += "M)"
-    
-    return chord_numeral + root_name
+    return chord_numeral
 
 
 def conv_tonic_name_for_kpdve(kpdve):

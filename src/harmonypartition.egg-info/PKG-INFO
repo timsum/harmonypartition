@@ -1,0 +1,25 @@
+Metadata-Version: 2.1
+Name: harmonypartition
+Version: 0.0.1
+Summary: Analyze harmonic content of binary data
+Home-page: https://github.com/timsum/harmonypartition
+Author: Timothy Summers
+Author-email: timsummers.dev@gmail.com
+License: UNKNOWN
+Description: # harmonypartition
+         A harmonic system built on byte partitions
+        
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Framework :: Matplotlib
+Classifier: Intended Audience :: Education
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Topic :: Games/Entertainment
+Classifier: Topic :: Multimedia
+Classifier: Topic :: Multimedia :: Sound/Audio :: Analysis
+Classifier: Topic :: Multimedia :: Sound/Audio :: MIDI
+Classifier: Topic :: Scientific/Engineering :: Visualization
+Description-Content-Type: text/markdown

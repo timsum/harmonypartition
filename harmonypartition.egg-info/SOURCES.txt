@@ -1,0 +1,6 @@
+README.md
+setup.py
+harmonypartition.egg-info/PKG-INFO
+harmonypartition.egg-info/SOURCES.txt
+harmonypartition.egg-info/dependency_links.txt
+harmonypartition.egg-info/top_level.txt
