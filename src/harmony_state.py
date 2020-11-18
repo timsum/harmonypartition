@@ -41,7 +41,7 @@ class harmony_state():
         self.current_kpdve_list = partita.analyze_binary_note_input(self.current_binary)
         self.current_chord_notes = pt_utils.bit_locs(self.current_binary)
     
-        self. prev_kpdve = self.current_kpdve
+        self.prev_kpdve = self.current_kpdve
         self.prev_binary = self.current_binary
     
         self.current_kpdve_scale = np.array([0, 0, 0, 2, 6])
