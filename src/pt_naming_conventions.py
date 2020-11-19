@@ -300,7 +300,7 @@ def kpdve_stream_string(kpdve, notegroup):
     info optimized for seeing terminal process.
     '''
 
-    description_string = hex(pt_utils.minimal_bin_kpdve(kpdve, notegroup)) + " <--> "
+    description_string = hex(pt_utils.minimal_bin_kpdve(notegroup, kpdve)) + " <--> "
     description_string += format(pt_keypattern.get_binary_KP(kpdve[0], kpdve[1]), "b").zfill(12) + " : " 
     description_string += conv_tonic_name_for_kpdve(kpdve) + " " + PATTERN_CONVENTIONAL_NAMES[kpdve[1]]
     description_string += " ================== "
