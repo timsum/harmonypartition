@@ -295,12 +295,13 @@ def conv_tonic_name_for_kpdve(kpdve):
     return note_name_for_kpdve(conv_tonic)
 
 # text descriptions for state (first more visual, second more verbal.)
-def kpdve_stream_string(kpdve):
+def kpdve_stream_string(kpdve, notegroup):
     '''
     info optimized for seeing terminal process.
     '''
 
-    description_string = format(pt_keypattern.get_binary_KP(kpdve[0], kpdve[1]), "b").zfill(12) + " : " 
+    description_string = hex(pt_utils.minimal_bin_kpdve(kpdve, notegroup)) + " <--> "
+    description_string += format(pt_keypattern.get_binary_KP(kpdve[0], kpdve[1]), "b").zfill(12) + " : " 
     description_string += conv_tonic_name_for_kpdve(kpdve) + " " + PATTERN_CONVENTIONAL_NAMES[kpdve[1]]
     description_string += " ================== "
     description_string += format(pt_keypattern.get_binary_KPDVE_chord(kpdve), "b").zfill(12) + " : " + chord_root_name_for_KPDVE(kpdve)

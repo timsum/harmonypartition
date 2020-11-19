@@ -146,9 +146,10 @@ class harmony_state():
         -------
         String
         '''
-        return pt_naming_conventions.kpdve_stream_string(self.current_kpdve)
+        return pt_naming_conventions.kpdve_stream_string(self.current_kpdve, self.current_binary)
+
+
     # access to useful note vals in a range...
-        
     # STANDARD MANIPULATIONS FOR NAVIGATING THE STATE AS A PLAYER...
         
     def param_increment(self, param_num, increment=1):
