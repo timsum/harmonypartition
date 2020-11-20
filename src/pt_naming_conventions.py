@@ -191,7 +191,7 @@ def circle_fifth_notes(k=0):
     A list of 12 note names.
     
     >>> circle_fifth_notes()
-    []
+    ['F', 'C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'G#', 'Eb', 'Bb']
 
     '''
     
@@ -298,14 +298,24 @@ def conv_tonic_name_for_kpdve(kpdve):
 def kpdve_stream_string(kpdve, notegroup):
     '''
     info optimized for seeing terminal process.
+
+
+
+    >>> kpdve_stream_string(np.array([0,0,0,4,2]), 0b110010000000)
+    '0022c80 <--> 111111100000 : C Major (tonic) === 110010000000 : F as  IV'
+
     '''
 
-    description_string = hex(pt_utils.minimal_bin_kpdve(notegroup, kpdve))[2:].zfill(7) + " <--> "
-    description_string += format(pt_keypattern.get_binary_KP(kpdve[0], kpdve[1]), "b").zfill(12) + " : " 
-    description_string += conv_tonic_name_for_kpdve(kpdve) + " " + PATTERN_CONVENTIONAL_NAMES[kpdve[1]]
+    hexstring = "0x" + hex(pt_utils.minimal_bin_kpdve(notegroup, kpdve))[2:].zfill(7)
+    description_string =  hexstring + " <--> "
+    kpstring = format(pt_keypattern.get_binary_KP(kpdve[0], kpdve[1]), "b").zfill(12)
+    description_string += kpstring + " : " 
+    tonicstring = conv_tonic_name_for_kpdve(kpdve).rjust(4)
+    patternstring = PATTERN_CONVENTIONAL_NAMES[kpdve[1]].ljust(16)
+    description_string += tonicstring + " " + patternstring
     description_string += " === "
-    description_string += format(pt_keypattern.get_binary_KPDVE_chord(kpdve), "b").zfill(12) + " : " + chord_root_name_for_KPDVE(kpdve)
-    description_string += " as "  + chord_function_in_key(kpdve)
+    description_string += format(pt_keypattern.get_binary_KPDVE_chord(kpdve), "b").zfill(12) + " : " 
+    description_string += chord_root_name_for_KPDVE(kpdve) + " as "  + chord_function_in_key(kpdve).ljust(4)
 
     return description_string
 
