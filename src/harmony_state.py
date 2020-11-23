@@ -34,7 +34,7 @@ class harmony_state():
     '''
 
 
-    def __init__(self, start_kpdve=np.array([0, 0, 0, 4, 2])):
+    def __init__(self, start_kpdve=np.array([0, 0, 0, 4, 3])):
         self.start_kpdve = start_kpdve
         self.current_kpdve = start_kpdve
         self.current_binary = partita.chord_for_KPDVE_input(self.current_kpdve)
@@ -56,7 +56,7 @@ class harmony_state():
         self.rand_walk_steps = np.array([-1, 0, 1])
 
 
-    def change_kpdve(self, new_kdpve):
+    def change_kpdve(self, new_kdpve, build_context=True):
         '''
         change harmonic location and associated global vars
 
@@ -78,13 +78,13 @@ class harmony_state():
         self.current_binary = partita.chord_for_KPDVE_input(self.current_kpdve)
         self.current_kpdve_list = partita.analyze_binary_note_input(self.current_binary)
 
-        #   this can be moved to a sublclass, as can everything below...
-        # self.build_context()
+        if (build_context):
+            self.build_context()
         
         return True
 
 
-    def change_notegroup(self, notegroup):
+    def change_notegroup(self, notegroup, build_context=True):
         '''
         Generate the harmonic context from a binary notegroup
 
@@ -112,7 +112,8 @@ class harmony_state():
         self.current_kpdve_list = partita.analyze_binary_note_input(notegroup)
 
         #   this can be moved to a sublclass, as can everything below...
-        # self.build_context()
+        if (build_context):
+            self.build_context()
         
         return True
 
@@ -182,42 +183,45 @@ class harmony_state():
 
         self.change_kpdve(pt_utils.kpdve_add(self.current_kpdve, inc_kpdve))
         
-    def random_note_in_key(self):
-        return 60 + random.choice(self.current_scale_notes)
+    # def random_note_in_key(self):
+    #     return 60 + random.choice(self.current_scale_notes)
 
-    def random_walk_in_key(self):
-        to_add = random.choice(self.rand_walk_steps)
-        self.current_scale_note_choice = self.current_scale_note_choice + to_add
+    # def random_walk_in_key(self):
+    #     to_add = random.choice(self.rand_walk_steps)
+    #     self.current_scale_note_choice = self.current_scale_note_choice + to_add
 
-        if self.current_scale_note_choice >= 14:
-            self.current_scale_note_choice -= 2
-        elif self.current_scale_note_choice < 0:
-            self.current_scale_note_choice += 2
+    #     if self.current_scale_note_choice >= 14:
+    #         self.current_scale_note_choice -= 2
+    #     elif self.current_scale_note_choice < 0:
+    #         self.current_scale_note_choice += 2
 
-        return (60 + self.current_scale_notes[self.current_scale_note_choice])
+    #     return (60 + self.current_scale_notes[self.current_scale_note_choice])
 
-    def random_note_in_chord(self):
-        return (60 + random.choice(self.current_chord_notes))
+    # def random_note_in_chord(self):
+    #     return (60 + random.choice(self.current_chord_notes))
 
-    def current_kpdve_notes(self):
-        notegroup = partita.chord_for_KPDVE_input(self.current_kpdve)
-        npnotes = np.array(pt_utils.bit_locs(notegroup))
-        return npnotes + 48
+    # def current_kpdve_notes(self):
+    #     notegroup = partita.chord_for_KPDVE_input(self.current_kpdve)
+    #     npnotes = np.array(pt_utils.bit_locs(notegroup))
+    #     return npnotes + 48
 
-    def root_note(self):
-        root = pt_utils.bit_locs(pt_musicutils.chrom_root_note_for_KPDVE(self.current_kpdve))[0]
-        return 36 + root
+    # def root_note(self):
+    #     root = pt_utils.bit_locs(pt_musicutils.chrom_root_note_for_KPDVE(self.current_kpdve))[0]
+    #     return 36 + root
 
     # access to convenient KPDVE 
     def random_friendly_kpdve(self):
         a_kpdve = pt_utils.kpdve_random()
         a_kpdve[3] = 4
-        a_kpdve[4] = 2
+        a_kpdve[4] = 3
 
         self.change_kpdve(a_kpdve)
 
     def random_list_kpdve(self):
-        self.change_kpdve(random.choice(partita.analyze_binary_note_input()))
+        self.change_kpdve(random.choice(partita.analyze_binary_note_input(self.current_binary)))
+
+    def random_kpdve(self):
+        self.change_kpdve(pt_utils.kpdve_random())
 
     def random_friendly_d(self):
         a_kpdve = self.current_kpdve.copy()
