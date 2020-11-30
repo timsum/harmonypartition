@@ -43,7 +43,6 @@ def analyze_binary_input_for_closest_KPDVE(notegroup, kpdve):
     else:
         return new_kpdve
 
-
 def analyze_midi_note_input_for_closest_KPDVE(midinote_list, kpdve):
     '''
 
@@ -76,7 +75,6 @@ def analyze_midi_note_input_for_closest_KPDVE(midinote_list, kpdve):
 # seem to work just fine.  For now: v_opt=0 until a later date.
 # v_options = np.array([thirds_only, scales_and_thirds, fifths_and_scales_and_thirds, all_close_voicings, all_voicings])
 # =============================================================================
-
 
 def analyze_binary_note_input(notegroup, v_opt=0):
     '''
@@ -122,7 +120,6 @@ def analyze_binary_note_input(notegroup, v_opt=0):
 # get a notegroup for a kpdve value
 # =============================================================================
 
-
 def chord_for_KPDVE_input(a_kpdve):
     '''
 
@@ -150,13 +147,10 @@ def chord_for_KPDVE_input(a_kpdve):
     return pt_utils.f_circle_to_c_chrom(pt_keypattern.get_binary_KPDVE_chord(a_kpdve))
 
 # =============================================================================
-# =============================================================================
 # # # =============================================================================
 # # #  Maximal optimized in/out -- probably more effective is to put this in the reader...
 # # # =============================================================================
 # =============================================================================
-# =============================================================================
-
 
 def binary_pairing_for_note_input(notegroup):
     '''
@@ -176,7 +170,6 @@ def binary_pairing_for_note_input(notegroup):
     bin_kpdve = pt_utils.KPDVE_to_binary_encoding(analyze_binary_input_for_closest_KPDVE(notegroup))
     return pt_utils.binary_encoded_context_chord_pair(bin_kpdve, notegroup)
 
-
 def binary_pairing_for_KPDVE_input(kpdve):
     '''
 
@@ -195,6 +188,8 @@ def binary_pairing_for_KPDVE_input(kpdve):
     notegroup = chord_for_KPDVE_input(kpdve)
     return pt_utils.binary_encoded_context_chord_pair(pt_utils.KPDVE_to_binary_encoding(kpdve), notegroup)
 
+# # # =============================================================================
+# ============= HELPER AND TEST============================
 
 def opening_sample_list_analysis(notegroup_list, chomp_pct=10, sample_pct=10):
     '''
@@ -237,7 +232,6 @@ def opening_sample_list_analysis(notegroup_list, chomp_pct=10, sample_pct=10):
     avg_kpdve = avg_kpdve / sample_size
     
     return avg_kpdve.astype(int)
-
 
 def test_analysis():
     '''

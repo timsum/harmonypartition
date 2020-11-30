@@ -558,6 +558,7 @@ def binary_notegroup_to_numpy_array(notegroup):
 
     return np_array
 
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
