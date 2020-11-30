@@ -13,26 +13,10 @@ import pt_utils
 import pt_musicutils
 import pt_naming_conventions
 
-
-
-# this should be a subclass of a more efficient version -- starting with only
-# the very basics
-
-# class pt_min_chord_context_pair():
-#     def __init__(self, bin_ng=0, bin_kpdve=0),:
-#         self.current_binary = bin_ng
-#         self.current_binary_kpdve = bin_kpdve
-
-# class pt_chord_with_context(pt_min_chord_context_pair):
-#     def __init__(self):
-#         super().init()
-
-
 class harmony_state():
     '''
     The core class for improvised performing in the kpdve|binary scheme
     '''
-
 
     def __init__(self, start_kpdve=np.array([0, 0, 0, 4, 3])):
         self.start_kpdve = start_kpdve
@@ -54,7 +38,6 @@ class harmony_state():
         self.current_scale_note_choice = 0
     
         self.rand_walk_steps = np.array([-1, 0, 1])
-
 
     def change_kpdve(self, new_kdpve, build_context=True):
         '''
@@ -82,7 +65,6 @@ class harmony_state():
             self.build_context()
         
         return True
-
 
     def change_notegroup(self, notegroup, build_context=True):
         '''
@@ -117,13 +99,6 @@ class harmony_state():
         
         return True
 
-# everything below can be in a subclass of the above == or better, its own class or file.
-# it shouldn't change as often as the fundamental integer values
-        # these extensions suited for purposes of
-        # 1: game navigation
-        # 2: midi playing.
-    
-        # they probably belong in a 'harmony world' file // project // structure...
     def build_context(self):
         self.current_chord_notes = pt_utils.bit_locs(self.current_binary)
         self.current_kpdve_scale = self.current_kpdve.copy()
@@ -149,10 +124,7 @@ class harmony_state():
         '''
         return pt_naming_conventions.kpdve_stream_string(self.current_kpdve, self.current_binary)
 
-
-    # access to useful note vals in a range...
-    # STANDARD MANIPULATIONS FOR NAVIGATING THE STATE AS A PLAYER...
-        
+    # STANDARD MANIPULATIONS FOR NAVIGATING THE STATE AS A PLAYER...        
     def param_increment(self, param_num, increment=1):
         '''
         returns a unit kpdve to add or subtract to a given
@@ -182,34 +154,7 @@ class harmony_state():
         inc_kpdve[param_num % 5] = increment
 
         self.change_kpdve(pt_utils.kpdve_add(self.current_kpdve, inc_kpdve))
-        
-    # def random_note_in_key(self):
-    #     return 60 + random.choice(self.current_scale_notes)
 
-    # def random_walk_in_key(self):
-    #     to_add = random.choice(self.rand_walk_steps)
-    #     self.current_scale_note_choice = self.current_scale_note_choice + to_add
-
-    #     if self.current_scale_note_choice >= 14:
-    #         self.current_scale_note_choice -= 2
-    #     elif self.current_scale_note_choice < 0:
-    #         self.current_scale_note_choice += 2
-
-    #     return (60 + self.current_scale_notes[self.current_scale_note_choice])
-
-    # def random_note_in_chord(self):
-    #     return (60 + random.choice(self.current_chord_notes))
-
-    # def current_kpdve_notes(self):
-    #     notegroup = partita.chord_for_KPDVE_input(self.current_kpdve)
-    #     npnotes = np.array(pt_utils.bit_locs(notegroup))
-    #     return npnotes + 48
-
-    # def root_note(self):
-    #     root = pt_utils.bit_locs(pt_musicutils.chrom_root_note_for_KPDVE(self.current_kpdve))[0]
-    #     return 36 + root
-
-    # access to convenient KPDVE 
     def random_friendly_kpdve(self):
         a_kpdve = pt_utils.kpdve_random()
         a_kpdve[3] = 4
@@ -242,3 +187,30 @@ class harmony_state():
         a_kpdve = self.current_kpdve.copy()
         a_kpdve[2] = (pt_utils.CONVENTION_DIST[a_kpdve[1]] + 1) % pt_utils.MODVALS[2]
         self.change_kpdve(a_kpdve)
+
+
+            # def random_note_in_key(self):
+    #     return 60 + random.choice(self.current_scale_notes)
+
+    # def random_walk_in_key(self):
+    #     to_add = random.choice(self.rand_walk_steps)
+    #     self.current_scale_note_choice = self.current_scale_note_choice + to_add
+
+    #     if self.current_scale_note_choice >= 14:
+    #         self.current_scale_note_choice -= 2
+    #     elif self.current_scale_note_choice < 0:
+    #         self.current_scale_note_choice += 2
+
+    #     return (60 + self.current_scale_notes[self.current_scale_note_choice])
+
+    # def random_note_in_chord(self):
+    #     return (60 + random.choice(self.current_chord_notes))
+
+    # def current_kpdve_notes(self):
+    #     notegroup = partita.chord_for_KPDVE_input(self.current_kpdve)
+    #     npnotes = np.array(pt_utils.bit_locs(notegroup))
+    #     return npnotes + 48
+
+    # def root_note(self):
+    #     root = pt_utils.bit_locs(pt_musicutils.chrom_root_note_for_KPDVE(self.current_kpdve))[0]
+    #     return 36 + root
