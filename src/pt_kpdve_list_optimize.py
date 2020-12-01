@@ -65,9 +65,9 @@ def closest_kpdve(kpdve_list, landmark):
             new_list.append(np.array(a_kpdve))
     
     if len(new_list) >= 1:
-        return sort_by_mod_distance(new_list, landmark)[0]
+        return np.array(sort_by_mod_distance(new_list, landmark)[0])
     
-    return sort_by_mod_distance(kpdve_list, landmark)[0]
+    return np.array(sort_by_mod_distance(kpdve_list, landmark)[0])
     
     
 def sort_by_mod_distance(kpdve_list, landmark):
@@ -82,8 +82,9 @@ def sort_by_mod_distance(kpdve_list, landmark):
 
     Returns
     -------
-     np.array(n, 5)
+    np.array(n, 5) 
         kpdve list sorted by distance from 'landmark'
+        note: this is an array of lists
 
     >>> sort_by_mod_distance([np.array([0,4,0,6,0]), np.array([11,4,6,3,8]), np.array([3,4,2,4,3]), np.array([6,5,7,5,3]), np.array([0,0,0,1,1])], np.array([0,0,0,0,0]))
     array([array([0, 0, 0, 1, 1]), array([0, 4, 0, 6, 0]),
@@ -224,4 +225,3 @@ def weighted_kpdve_distance(KPDVE1, KPDVE2, wieghts):
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
-
