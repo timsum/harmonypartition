@@ -19,26 +19,41 @@ class harmony_state():
     '''
 
     def __init__(self, start_kpdve=np.array([0, 0, 0, 4, 3])):
+        # KPDVE VAL & START (START DOES *NOT* CHANGE)
         self.start_kpdve = start_kpdve
         self.current_kpdve = start_kpdve
+
+        # BINARY (chromatic)
         self.current_binary = partita.chord_for_KPDVE_input(self.current_kpdve)
+
+        # KPDVE LIST
         self.current_kpdve_list = partita.analyze_binary_note_input(self.current_binary)
-        self.current_chord_notes = pt_utils.bit_locs(self.current_binary)
-    
+
+        # PREVIOUS VALUES
         self.prev_kpdve = self.current_kpdve
         self.prev_binary = self.current_binary
+
+        # ====> items built in 'build_context'
+        # UNORDERED CHORD
+        self.current_chord_notes = pt_utils.bit_locs(self.current_binary)
+        self.current_scale_notes = pt_musicutils.scale_notes_for_KPDVE(self.current_kpdve)
     
-        self.current_kpdve_scale = np.array([0, 0, 0, 2, 6])
-        self.current_binary_scale = partita.chord_for_KPDVE_input(self.current_kpdve_scale)
-    
-        self.scale_notes = pt_utils.bit_locs(self.current_binary_scale)
-        self.next_oct = self.scale_notes + 12
-    
-        self.current_scale_notes = np.append(self.scale_notes, self.next_oct)
+        # IMPORTANT REFERENCE NOTES
+        self.current_root = 0
+        self.current_conv_tonic = 0
+
+        # ORDERED CHORD/SCALE
+        self.ordered_chord_oct = np.zeros(7)
+        self.ordered_scale_oct = np.zeros(7)
+        self.ordered_chord_asc = np.zeros(7)
+        self.ordered_scale_asc = np.zeros(7)
+
+        # FREE RADICAL
         self.current_scale_note_choice = 0
-    
         self.rand_walk_steps = np.array([-1, 0, 1])
 
+
+#   CORE FUNCTIONS: CHANGE BY KPDVE OR BINARY
     def change_kpdve(self, new_kdpve, build_context=True):
         '''
         change harmonic location and associated global vars
@@ -65,6 +80,7 @@ class harmony_state():
             self.build_context()
         
         return True
+
 
     def change_notegroup(self, notegroup, build_context=True, v_opt=0):
         '''
@@ -99,18 +115,23 @@ class harmony_state():
         
         return True
 
+
+#   BUILD PATTERN INFORMATION (CAN BE SHUT OFF IN build_context)
     def build_context(self):
         # chord notes in one octave
         self.current_chord_notes = pt_utils.bit_locs(self.current_binary)
-        # build the scale kpdve
-        self.current_kpdve_scale = self.current_kpdve.copy()
-        self.current_kpdve_scale[3] = 1
-        self.current_kpdve_scale[4] = 6
-        self.current_binary_scale = partita.chord_for_KPDVE_input(self.current_kpdve_scale)
+        self.current_scale_notes = pt_musicutils.scale_notes_for_KPDVE(self.current_kpdve)
+    
+        # IMPORTANT REFERENCE NOTES
+        self.current_root =         pt_musicutils.circle_root_note_for_KPDVE(self.current_kpdve)
+        self.current_conv_tonic =   pt_musicutils.circle_conv_tonic_for_KPDVE(self.current_kpdve)
 
-        self.scale_notes = pt_utils.bit_locs(self.current_binary_scale)
-        next_oct = self.scale_notes + 12
-        self.current_scale_notes = np.append(self.scale_notes, next_oct)
+        # ORDERED CHORD/SCALE
+        self.ordered_chord_oct = pt_musicutils.ordered_chord_notes_for_KPDVE(self.current_kpdve)
+        self.ordered_scale_oct = pt_musicutils.ordered_scale_notes_for_KPDVE(self.current_kpdve)
+        self.ordered_chord_asc = pt_musicutils.unfold_ascending(self.ordered_chord_oct)
+        self.ordered_scale_asc = pt_musicutils.unfold_ascending(self.ordered_scale_oct)
+
 
     def string_description(self):
         '''
@@ -125,6 +146,7 @@ class harmony_state():
         String
         '''
         return pt_naming_conventions.kpdve_stream_string(self.current_kpdve, self.current_binary)
+
 
     # STANDARD MANIPULATIONS FOR NAVIGATING THE STATE AS A PLAYER...        
     def param_increment(self, param_num, increment=1, build_context=True):
@@ -192,6 +214,11 @@ class harmony_state():
 
 
             # def random_note_in_key(self):
+    
+    
+    
+    
+    
     #     return 60 + random.choice(self.current_scale_notes)
 
     # def random_walk_in_key(self):
