@@ -142,7 +142,7 @@ def kpdve_distance_list(kpdve_list):
     KPDVE list of transitions (1 minus the next)
     
     >>> kpdve_distance_list(np.array([5,4,3,2,1]))
-    array([ -1, -1, -1, -1,  4])
+    array([-1, -1, -1, -1,  4])
 
     '''
     

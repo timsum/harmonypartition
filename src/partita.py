@@ -9,7 +9,7 @@ import pt_kpdve_list_optimize
 # MIDI and notegroup input for KPDVE output
 # =============================================================================
 
-def analyze_binary_input_for_closest_KPDVE(notegroup, kpdve):
+def analyze_binary_input_for_closest_KPDVE(notegroup, kpdve, v_opt=0):
     '''
 
     Parameters
@@ -36,7 +36,7 @@ def analyze_binary_input_for_closest_KPDVE(notegroup, kpdve):
     
     '''
 
-    new_kpdve = pt_kpdve_list_optimize.closest_kpdve(analyze_binary_note_input(notegroup), kpdve)
+    new_kpdve = pt_kpdve_list_optimize.closest_kpdve(analyze_binary_note_input(notegroup, v_opt=v_opt), kpdve)
 
     if np.array_equal(new_kpdve, pt_utils.MODVALS):
         return kpdve
