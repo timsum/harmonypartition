@@ -121,16 +121,16 @@ class harmony_state():
         # chord notes in one octave
         self.current_chord_notes = pt_utils.bit_locs(self.current_binary)
         self.current_scale_notes = pt_musicutils.scale_notes_for_KPDVE(self.current_kpdve)
-    
-        # IMPORTANT REFERENCE NOTES
-        self.current_root =         pt_musicutils.circle_root_note_for_KPDVE(self.current_kpdve)
-        self.current_conv_tonic =   pt_musicutils.circle_conv_tonic_for_KPDVE(self.current_kpdve)
 
         # ORDERED CHORD/SCALE
         self.ordered_chord_oct = pt_musicutils.ordered_chord_notes_for_KPDVE(self.current_kpdve)
         self.ordered_scale_oct = pt_musicutils.ordered_scale_notes_for_KPDVE(self.current_kpdve)
         self.ordered_chord_asc = pt_musicutils.unfold_ascending(self.ordered_chord_oct)
         self.ordered_scale_asc = pt_musicutils.unfold_ascending(self.ordered_scale_oct)
+
+        # IMPORTANT REFERENCE NOTES
+        self.current_root =         pt_utils.bit_locs(pt_musicutils.circle_root_note_for_KPDVE(self.current_kpdve))[0]
+        self.current_conv_tonic =   pt_utils.bit_locs(pt_musicutils.circle_conv_tonic_for_KPDVE(self.current_kpdve))[0]
 
 
     def string_description(self):
