@@ -53,56 +53,21 @@ def closest_kpdve(kpdve_list, landmark):
     if len(kpdve_list) == 0:
         return landmark ## assume no effect
 
-    
-    return np.array(sort_by_param_priority(kpdve_list, landmark)[0])
-    #return np.array(sort_by_mod_distance(kpdve_list, landmark)[0]) #too wild
-    
-
-def sort_by_param_priority(kpdve_list, landmark):
-    '''
-    sorts by steps: 0) if there is kpd match, that's it 
-                    1) if there is a kp match, that's it.  
-                    Beyond that, if 
-                    there is a K match, find 
-                    the closest to P=0 amongst those with a K match. if that 
-                    array length is greater than two, search for the closest degree'
-
-    Parameters
-    ----------
-    kpdve_list : np.array(n, 5)
-        a list of numpy arrays of form KPDVE
-    landmark : a numpy array (5)
-        a KPDVE array from whose location distances are measured.
-
-    Returns
-    -------
-    np.array(n, 5)
-        kpdve list sorted by distance from 'landmark'
-
-    '''
-    if len(kpdve_list) == 0:
-        return  np.array([pt_utils.MODVALS])
-
     new_list = []
     for a_kpdve in kpdve_list:
         # if there's kpd match -- this is okay but a bit sub-optimal... what if another voicing gives a better, more efficient analysis?
         # then you'd have to lop through the voicings and compare... would be more stable
-        # if a_kpdve[0] == landmark[0] and a_kpdve[1] == landmark[1] and a_kpdve[2] == landmark[2]:
-        #     new_list.append(np.array(a_kpdve))
-        # if there's kp match
-        if a_kpdve[0] == landmark[0] and a_kpdve[1] == landmark[1]:
+        if a_kpdve[0] == landmark[0] and a_kpdve[1] == landmark[1] and a_kpdve[2] == landmark[2]:
+            new_list.append(np.array(a_kpdve))
+        elif a_kpdve[0] == landmark[0] and a_kpdve[1] == landmark[1]:
             new_list.append(np.array(a_kpdve))
         elif a_kpdve[0] == landmark[0]:
             new_list.append(np.array(a_kpdve))
     
-    # if there are k matches... FOR NOW go for the loest P (later math.abs(4-p))
-    if len(new_list) > 1:
-        return np.array(sorted(new_list, key=itemgetter(1)))
-
-    return sort_by_mod_distance(kpdve_list, landmark)
-        
-    # if there aren't k's.. look for d's? or look for nearest? or look for
-    # something close to 'landmark's' kpdve list?
+    if len(new_list) >= 1:
+        return sort_by_mod_distance(new_list, landmark)[0]
+    
+    return sort_by_mod_distance(kpdve_list, landmark)[0]
     
     
 def sort_by_mod_distance(kpdve_list, landmark):
