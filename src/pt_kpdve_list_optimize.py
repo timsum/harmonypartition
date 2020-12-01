@@ -95,7 +95,7 @@ def sort_by_param_priority(kpdve_list, landmark):
         elif a_kpdve[0] == landmark[0]:
             new_list.append(np.array(a_kpdve))
     
-    # if there are k matches... FOR NOW go for the loest P (later math.abs(4-p))
+    # if there are k matches > 0 ... FOR NOW go for the loest P (later math.abs(4-p))
     if len(new_list) > 1:
         return np.array(sorted(new_list, key=itemgetter(1)))
 
@@ -177,7 +177,7 @@ def kpdve_distance_list(kpdve_list):
     KPDVE list of transitions (1 minus the next)
     
     >>> kpdve_distance_list(np.array([5,4,3,2,1]))
-    array([ -1, -1, -1, -1,  4])
+    array([-1, -1, -1, -1,  4])
 
     '''
     

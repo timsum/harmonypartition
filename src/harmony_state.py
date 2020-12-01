@@ -66,7 +66,7 @@ class harmony_state():
         
         return True
 
-    def change_notegroup(self, notegroup, build_context=True):
+    def change_notegroup(self, notegroup, build_context=True, v_opt=0):
         '''
         Generate the harmonic context from a binary notegroup
 
@@ -91,7 +91,7 @@ class harmony_state():
 
         self.current_kpdve = partita.analyze_binary_input_for_closest_KPDVE(notegroup, self.current_kpdve)
         self.current_binary = notegroup
-        self.current_kpdve_list = partita.analyze_binary_note_input(notegroup)
+        self.current_kpdve_list = partita.analyze_binary_note_input(notegroup, v_opt=v_opt)
 
         #   this can be moved to a sublclass, as can everything below...
         if (build_context):
