@@ -100,7 +100,9 @@ class harmony_state():
         return True
 
     def build_context(self):
+        # chord notes in one octave
         self.current_chord_notes = pt_utils.bit_locs(self.current_binary)
+        # build the scale kpdve
         self.current_kpdve_scale = self.current_kpdve.copy()
         self.current_kpdve_scale[3] = 1
         self.current_kpdve_scale[4] = 6
@@ -125,7 +127,7 @@ class harmony_state():
         return pt_naming_conventions.kpdve_stream_string(self.current_kpdve, self.current_binary)
 
     # STANDARD MANIPULATIONS FOR NAVIGATING THE STATE AS A PLAYER...        
-    def param_increment(self, param_num, increment=1):
+    def param_increment(self, param_num, increment=1, build_context=True):
         '''
         returns a unit kpdve to add or subtract to a given
 
@@ -153,7 +155,7 @@ class harmony_state():
         inc_kpdve = np.zeros(5, dtype=int)
         inc_kpdve[param_num % 5] = increment
 
-        self.change_kpdve(pt_utils.kpdve_add(self.current_kpdve, inc_kpdve))
+        self.change_kpdve(pt_utils.kpdve_add(self.current_kpdve, inc_kpdve), build_context=build_context)
 
     def random_friendly_kpdve(self):
         a_kpdve = pt_utils.kpdve_random()

@@ -131,6 +131,29 @@ def chrom_conv_tonic_for_KPDVE(kpdve):
     return pt_utils.f_circle_to_c_chrom(circle_conv_tonic_for_KPDVE(kpdve))
 
 
+def ordered_chord_notes_for_KPDVE(kpdve):
+    '''
+
+    Parameters
+    ----------
+    kpdve : np.array(5)
+        a kpdve array whose notes are to be returned from the root up.
+
+    Returns
+    -------
+    an array of notes, root first.
+    
+    >>> get_ordered_chord_notes(np.array([0,0,0,4,3]))
+    array([0, 4, 1, 5])
+    '''
+    chord = []
+    
+    for i in range(kpdve[4]+1):
+        chord.append(pt_utils.bit_locs(get_binary_KPDVE_note(np.array([kpdve[0], kpdve[1], kpdve[2], kpdve[3], i])))[0])
+
+    return np.array(chord)
+
+
 # an integer to codify function
 def circle_conv_function_for_KPDVE(kpdve):
     '''
