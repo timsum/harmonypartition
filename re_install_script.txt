@@ -1,0 +1,3 @@
+pip uninstall harmonypartition
+
+pip install git+https://github.com/timsum/harmonypartition.git#egg=harmonypartition;
