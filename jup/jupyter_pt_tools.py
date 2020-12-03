@@ -31,7 +31,7 @@ def notegroup_heatmap(notegroup, chromatic=False, title=None):
 def multiple_notegroup_heatmap(notegroup_list, chromatic=False, yticks=[], title=None):
     np_notegroup_list = np.array([pt_utils.binary_notegroup_to_numpy_array(ng) for ng in notegroup_list])
     
-    fig, ax = plt.subplots(figsize=(17, len(np_notegroup_list)))
+    fig, ax = plt.subplots(figsize=(12, len(np_notegroup_list)))
     ticknames = pt_naming_conventions.circle_fifth_notes() if chromatic == False else pt_naming_conventions.chromatic_notes()
 
     # for this... hm... always want it?
