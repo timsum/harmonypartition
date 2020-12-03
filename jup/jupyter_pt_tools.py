@@ -49,7 +49,7 @@ def multiple_notegroup_heatmap(notegroup_list, chromatic=False, yticks=[], title
                cbar=False, 
                vmin=0)
     
-    plt.title(title, fontsize=16)
+    ax.set_title(title, fontsize=16)
     plt.show()
 
 
@@ -75,7 +75,7 @@ def horizontal_notegroup_heatmap(notegroup_list, chromatic=False, xticks=[], tit
                cbar=False, 
                vmin=0)
     
-    plt.title(title, fontsize=16)
+    ax.set_title(title, fontsize=16)
     plt.show()
 
 def heatmap_for_midi_file(filename, key_orientation=np.array([0,0,0,4,3])):
