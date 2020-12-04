@@ -127,6 +127,11 @@ def notegroup_wavepile(notegroup, Fs=4000, duration=2, chromatic=False, from_mid
         ng = pt_utils.f_circle_to_c_chrom(ng)
         
     notenums = pt_utils.bit_locs(ng)
+        
+    return ordered_notegroup_wavepile(notenums, Fs=Fs, duration=duration, chromatic=chromatic, from_middle_c=from_middle_c)
+
+
+def ordered_notegroup_wavepile(notenums, Fs=4000, duration=2, chromatic=False, from_middle_c=0):
     t = np.linspace(0, duration, int(Fs * duration))
 
     signal = np.zeros_like(t)
@@ -142,7 +147,11 @@ def notegroup_wavestep(notegroup, Fs=4000, duration=2, chromatic=False, from_mid
         ng = pt_utils.f_circle_to_c_chrom(ng)
         
     notenums = pt_utils.bit_locs(ng)
-    
+        
+    return ordered_notegroup_wavestep(notenums, Fs=Fs, duration=duration, chromatic=chromatic, from_middle_c=from_middle_c)
+
+
+def ordered_notegroup_wavestep(notenums, Fs=4000, duration=2, chromatic=False, from_middle_c=0):
     stepdur = duration/len(notenums)
     steplength = int(Fs * stepdur)
     
@@ -186,6 +195,38 @@ def link_wavepile_sequences(notegroup_list, Fs=4000, duration=2, chromatic=False
 
     return signal
 
+
+def link_ordered_wavepile_sequences(notegroup_list, Fs=4000, duration=2, chromatic=False, from_middle_c=0):
+    '''
+    return a wave file with the signals in sequence
+
+    Parameters
+    ----------
+    notegroup_list : TYPE
+        DESCRIPTION.
+    duration : TYPE
+        DESCRIPTION.
+    Fs : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    a sequence of chords spread evenly over duration
+
+    '''
+    
+    # set the length of each segment
+    stepdur = duration/len(notegroup_list)
+    
+    # get a signal of that length for each notegroup
+    signal = np.empty(0)
+    
+    for i, a_notegroup in enumerate(notegroup_list):
+        signal = np.concatenate((signal, ordered_notegroup_wavepile(a_notegroup, Fs=Fs, duration=stepdur, chromatic=chromatic, from_middle_c=from_middle_c)), axis=0)
+
+    return signal
+
+
 def link_wavestep_sequences(notegroup_list, Fs=4000, duration=2, chromatic=False, from_middle_c=0):
     '''
     return a wave file with the signals in sequence
@@ -216,4 +257,33 @@ def link_wavestep_sequences(notegroup_list, Fs=4000, duration=2, chromatic=False
 
     return signal
 
+
+def link_ordered_wavestep_sequences(notegroup_list, Fs=4000, duration=2, chromatic=False, from_middle_c=0):
+    '''
+    return a wave file with the signals in sequence
+
+    Parameters
+    ----------
+    notegroup_list : TYPE
+        DESCRIPTION.
+    duration : TYPE
+        DESCRIPTION.
+    Fs : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    a sequence of chords spread evenly over duration
+
+    '''
     
+    # set the length of each segment
+    stepdur = duration/len(notegroup_list)
+    
+    # get a signal of that length for each notegroup
+    signal = np.empty(0)
+    
+    for i, a_notegroup in enumerate(notegroup_list):
+        signal = np.concatenate((signal, ordered_notegroup_wavestep(a_notegroup, Fs=Fs, duration=stepdur, chromatic=chromatic, from_middle_c=from_middle_c)), axis=0)
+
+    return signal

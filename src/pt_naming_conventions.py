@@ -284,7 +284,7 @@ def chord_function_in_key(kpdve):
     conv_kpdve = pt_utils.kpdve_add(kpdve, pt_utils.conv_d_distortion_vec_for_p(kpdve[1]))
     
     # get the chord roman numeral
-    chord_numeral = '{:>3}'.format(MODE_NUMERALS[conv_kpdve[2]])
+    chord_numeral = '{:>2}'.format(MODE_NUMERALS[conv_kpdve[2]])
     
     return chord_numeral
 
