@@ -132,7 +132,7 @@ class harmony_state():
         self.current_root =         pt_utils.bit_locs(pt_musicutils.chrom_root_note_for_KPDVE(self.current_kpdve))[0]
         self.current_conv_tonic =   pt_utils.bit_locs(pt_musicutils.chrom_conv_tonic_for_KPDVE(self.current_kpdve))[0]
 
-
+    
     def string_description(self):
         '''
         returns string showing the current state in a terminal-friendly format.

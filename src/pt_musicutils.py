@@ -224,6 +224,88 @@ def unfold_ascending(note_array):
 
     return ordered_asc
 
+
+# RAW CHORDS/MODES WITH A DISPLACEMENT, TO INTERACT WITH SCALE/KEY-BASED ENVIRONMENTS (e.g. FoxDot)
+def get_chord_disp_tuple(kpdve):
+    '''
+    Parameters
+    ----------
+    kpdve : np.array(some size)
+        a kpdve array whose chord notes are to be returned from the root up, without folding back over into a pitch class set.
+
+    Returns
+    -------
+    an array of notes, root first, going all the way through a the chord, starting from zero, and taking the root as displacement (tonic).
+
+    >>> get_chord_disp_tuple(np.array([0, 0, 0, 2, 6]))
+    (array([ 0,  2,  4,  6,  7,  9, 11]), 5)
+    
+    FM7 (potentially) treated as a scale
+    >>> get_chord_disp_tuple(np.array([0, 0, 0, 4, 3]))
+    (array([ 0,  4,  7, 11]), 5)
+    '''
+    
+    ordered = ordered_chord_notes_for_KPDVE(kpdve)
+    unfolded = unfold_ascending(ordered) - ordered[0]
+    disp = pt_utils.bit_locs(chrom_root_note_for_KPDVE(kpdve))[0]
+    return unfolded, disp
+    
+
+def get_mode_disp_tuple(kpdve):
+    '''
+    Parameters
+    ----------
+    kpdve : np.array(some size)
+        a kpdve array whose chord notes are to be returned from the root up, without folding back over into a pitch class set.
+
+    Returns
+    -------
+    an array of notes, root first, going all the way through a the chord, starting from zero, and taking the root as displacement (tonic).
+
+    F LYDIAN for next two cases.
+    >>> get_mode_disp_tuple(np.array([0, 0, 0, 2, 6]))
+    (array([ 0,  2,  4,  6,  7,  9, 11]), 5)
+    
+    >>> get_mode_disp_tuple(np.array([0, 0, 0, 4, 3]))
+    (array([ 0,  2,  4,  6,  7,  9, 11]), 5)
+
+    '''
+    
+    full_scale = np.array([kpdve[0], kpdve[1], kpdve[2], 2, 6])
+    return get_chord_disp_tuple(full_scale)
+
+
+def get_tonic_mode_disp_tuple(kpdve):
+    '''
+    Parameters
+    ----------
+    kpdve : np.array(some size)
+        a kpdve array whose conventional mode (melodic minor, e.g.) root up, without folding back over into a pitch class set.
+
+    Returns
+    -------
+    an array of notes, root first, going all the way through a the mode, starting from zero, and taking the root as displacement (tonic).
+
+    C MAJOR for next two cases.
+    >>> get_tonic_mode_disp_tuple(np.array([0, 0, 0, 2, 6]))
+    (array([ 0,  2,  4,  5,  7,  9, 11]), 0)
+    
+    >>> get_tonic_mode_disp_tuple(np.array([0, 0, 0, 4, 3]))
+    (array([ 0,  2,  4,  5,  7,  9, 11]), 0)
+    
+    G MAJOR
+    >>> get_tonic_mode_disp_tuple(np.array([1, 0, 0, 4, 3]))
+    (array([ 0,  2,  4,  5,  7,  9, 11]), 7)
+    
+    G MAJOR (as Dominant)
+    >>> get_tonic_mode_disp_tuple(np.array([0, 1, 0, 4, 3]))
+    (array([ 0,  2,  4,  5,  7,  9, 11]), 7)
+
+    '''
+    conv_scale = np.array([kpdve[0], kpdve[1], pt_utils.CONVENTION_DIST[kpdve[1]], 2, 6])
+    return get_mode_disp_tuple(conv_scale)
+
+
 # ======================
 # get an integer to codify functions within a key (e.g. IV, V, etc.)
 def circle_conv_function_for_KPDVE(kpdve):
