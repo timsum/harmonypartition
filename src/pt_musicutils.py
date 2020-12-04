@@ -300,6 +300,10 @@ def get_tonic_mode_disp_tuple(kpdve):
     G MAJOR (as Dominant)
     >>> get_tonic_mode_disp_tuple(np.array([0, 1, 0, 4, 3]))
     (array([ 0,  2,  4,  5,  7,  9, 11]), 7)
+    
+    G MAJOR (as Dominant)
+    >>> get_tonic_mode_disp_tuple(np.array([0, 1, 2, 4, 3]))
+    (array([ 0,  2,  4,  5,  7,  9, 11]), 7)
 
     '''
     conv_scale = np.array([kpdve[0], kpdve[1], pt_utils.CONVENTION_DIST[kpdve[1]], 2, 6])
