@@ -33,28 +33,11 @@ class harmony_state():
         self.prev_kpdve = self.current_kpdve
         self.prev_binary = self.current_binary
 
-        # ====> items built in 'build_context'
-        # UNORDERED CHORD
-        self.current_chord_notes = pt_utils.bit_locs(self.current_binary)
-        self.current_scale_notes = pt_musicutils.scale_notes_for_KPDVE(self.current_kpdve)
-    
-        # IMPORTANT REFERENCE NOTES
-        self.current_root = 0
-        self.current_conv_tonic = 0
-
-        # ORDERED CHORD/SCALE
-        self.ordered_chord_oct = np.zeros(7)
-        self.ordered_scale_oct = np.zeros(7)
-        self.ordered_chord_asc = np.zeros(7)
-        self.ordered_scale_asc = np.zeros(7)
-
-        # FREE RADICAL
-        self.current_scale_note_choice = 0
         self.rand_walk_steps = np.array([-1, 0, 1])
 
 
 #   CORE FUNCTIONS: CHANGE BY KPDVE OR BINARY
-    def change_kpdve(self, new_kdpve, build_context=True):
+    def change_kpdve(self, new_kdpve):
         '''
         change harmonic location and associated global vars
 
@@ -82,7 +65,7 @@ class harmony_state():
         return True
 
 
-    def change_notegroup(self, notegroup, build_context=True, v_opt=0):
+    def change_notegroup(self, notegroup, v_opt=0):
         '''
         Generate the harmonic context from a binary notegroup
 
@@ -108,31 +91,47 @@ class harmony_state():
         self.current_kpdve = partita.analyze_binary_input_for_closest_KPDVE(notegroup, self.current_kpdve)
         self.current_binary = notegroup
         self.current_kpdve_list = partita.analyze_binary_note_input(notegroup, v_opt=v_opt)
-
-        #   this can be moved to a sublclass, as can everything below...
-        if (build_context):
-            self.build_context()
         
         return True
 
-
-#   BUILD PATTERN INFORMATION (CAN BE SHUT OFF IN build_context)
-    def build_context(self):
-        # chord notes in one octave
-        self.current_chord_notes = pt_utils.bit_locs(self.current_binary)
-        self.current_scale_notes = pt_musicutils.scale_notes_for_KPDVE(self.current_kpdve)
-
-        # ORDERED CHORD/SCALE
-        self.ordered_chord_oct = pt_musicutils.ordered_chord_notes_for_KPDVE(self.current_kpdve)
-        self.ordered_scale_oct = pt_musicutils.ordered_scale_notes_for_KPDVE(self.current_kpdve)
-        self.ordered_chord_asc = pt_musicutils.unfold_ascending(self.ordered_chord_oct)
-        self.ordered_scale_asc = pt_musicutils.unfold_ascending(self.ordered_scale_oct)
-
-        # IMPORTANT REFERENCE NOTES
-        self.current_root =         pt_utils.bit_locs(pt_musicutils.chrom_root_note_for_KPDVE(self.current_kpdve))[0]
-        self.current_conv_tonic =   pt_utils.bit_locs(pt_musicutils.chrom_conv_tonic_for_KPDVE(self.current_kpdve))[0]
-
+    # ACCESS EXTRAPOLATIONS.
     
+    def current_chord_notes(self):
+        return pt_utils.bit_locs(self.current_binary)
+    
+    def current_scale_notes(self):
+        return pt_musicutils.scale_notes_for_KPDVE(self.current_kpdve)
+    
+    def ordered_chord_oct(self):
+        return pt_musicutils.ordered_chord_notes_for_KPDVE(self.current_kpdve)
+    
+    def ordered_scale_oct(self):
+        return pt_musicutils.ordered_scale_notes_for_KPDVE(self.current_kpdve)
+    
+    def ordered_chord_asc(self):
+        return pt_musicutils.unfold_ascending(self.ordered_chord_oct(self.current_kpdve))
+    
+    def ordered_scale_asc(self):
+        return pt_musicutils.unfold_ascending(self.ordered_scale_oct(self.current_kpdve))
+    
+    def current_root(self):
+        return pt_utils.bit_locs(pt_musicutils.chrom_root_note_for_KPDVE(self.current_kpdve))[0]
+    
+    def current_conv_tonic(self):
+        return pt_utils.bit_locs(pt_musicutils.chrom_conv_tonic_for_KPDVE(self.current_kpdve))[0]
+    
+    
+    # RAW CHORDS/MODES WITH A DISPLACEMENT, TO INTERACT WITH SCALE/KEY-BASED ENVIRONMENTS (e.g. FoxDot)
+    def get_chord_disp_tuple(self):
+        return pt_musicutils.get_chord_disp_tuple(self.current_kpdve)
+    
+    def get_mode_disp_tuple(self):
+        return pt_musicutils.get_mode_disp_tuple(self.current_kpdve)
+    
+    def get_tonic_mode_disp_tuple(self):
+        return pt_musicutils.get_tonic_mode_disp_tuple(self.current_kpdve)
+    
+    # --------------------------------------------------------------
     def string_description(self):
         '''
         returns string showing the current state in a terminal-friendly format.
@@ -146,12 +145,12 @@ class harmony_state():
         String
         '''
         return pt_naming_conventions.kpdve_stream_string(self.current_kpdve, self.current_binary)
-
-
+    
+    # --------------------------------------------------------------
     # STANDARD MANIPULATIONS FOR NAVIGATING THE STATE AS A PLAYER...        
     def param_increment(self, param_num, increment=1, build_context=True):
         '''
-        returns a unit kpdve to add or subtract to a given
+        returns a unit kpdve to add or subtract to a given parameter.  Creates navigation possibilities through mapping
 
         Parameters
         ----------
@@ -213,33 +212,3 @@ class harmony_state():
         self.change_kpdve(a_kpdve)
 
 
-            # def random_note_in_key(self):
-    
-    
-    
-    
-    
-    #     return 60 + random.choice(self.current_scale_notes)
-
-    # def random_walk_in_key(self):
-    #     to_add = random.choice(self.rand_walk_steps)
-    #     self.current_scale_note_choice = self.current_scale_note_choice + to_add
-
-    #     if self.current_scale_note_choice >= 14:
-    #         self.current_scale_note_choice -= 2
-    #     elif self.current_scale_note_choice < 0:
-    #         self.current_scale_note_choice += 2
-
-    #     return (60 + self.current_scale_notes[self.current_scale_note_choice])
-
-    # def random_note_in_chord(self):
-    #     return (60 + random.choice(self.current_chord_notes))
-
-    # def current_kpdve_notes(self):
-    #     notegroup = partita.chord_for_KPDVE_input(self.current_kpdve)
-    #     npnotes = np.array(pt_utils.bit_locs(notegroup))
-    #     return npnotes + 48
-
-    # def root_note(self):
-    #     root = pt_utils.bit_locs(pt_musicutils.chrom_root_note_for_KPDVE(self.current_kpdve))[0]
-    #     return 36 + root
