@@ -58,9 +58,6 @@ class harmony_state():
         self.current_kpdve = new_kdpve
         self.current_binary = partita.chord_for_KPDVE_input(self.current_kpdve)
         self.current_kpdve_list = partita.analyze_binary_note_input(self.current_binary)
-
-        if (build_context):
-            self.build_context()
         
         return True
 
