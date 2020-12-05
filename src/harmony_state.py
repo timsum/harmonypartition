@@ -145,7 +145,7 @@ class harmony_state():
     
     # --------------------------------------------------------------
     # STANDARD MANIPULATIONS FOR NAVIGATING THE STATE AS A PLAYER...        
-    def param_increment(self, param_num, increment=1, build_context=True):
+    def param_increment(self, param_num, increment=-1):
         '''
         returns a unit kpdve to add or subtract to a given parameter.  Creates navigation possibilities through mapping
 
@@ -173,7 +173,7 @@ class harmony_state():
         inc_kpdve = np.zeros(5, dtype=int)
         inc_kpdve[param_num % 5] = increment
 
-        self.change_kpdve(pt_utils.kpdve_add(self.current_kpdve, inc_kpdve), build_context=build_context)
+        self.change_kpdve(pt_utils.kpdve_add(self.current_kpdve, inc_kpdve))
 
     def random_friendly_kpdve(self):
         a_kpdve = pt_utils.kpdve_random()
