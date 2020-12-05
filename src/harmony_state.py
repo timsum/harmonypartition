@@ -106,10 +106,10 @@ class harmony_state():
         return pt_musicutils.ordered_scale_notes_for_KPDVE(self.current_kpdve)
     
     def ordered_chord_asc(self):
-        return pt_musicutils.unfold_ascending(self.ordered_chord_oct(self.current_kpdve))
+        return pt_musicutils.unfold_ascending(self.ordered_chord_oct())
     
     def ordered_scale_asc(self):
-        return pt_musicutils.unfold_ascending(self.ordered_scale_oct(self.current_kpdve))
+        return pt_musicutils.unfold_ascending(self.ordered_scale_oct())
     
     def current_root(self):
         return pt_utils.bit_locs(pt_musicutils.chrom_root_note_for_KPDVE(self.current_kpdve))[0]
