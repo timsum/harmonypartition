@@ -119,6 +119,7 @@ class harmony_state():
     
     
     # RAW CHORDS/MODES WITH A DISPLACEMENT, TO INTERACT WITH SCALE/KEY-BASED ENVIRONMENTS (e.g. FoxDot)
+    # assumes chromatic basis
     def get_chord_disp_tuple(self):
         return pt_musicutils.get_chord_disp_tuple(self.current_kpdve)
     
@@ -127,6 +128,13 @@ class harmony_state():
     
     def get_tonic_mode_disp_tuple(self):
         return pt_musicutils.get_tonic_mode_disp_tuple(self.current_kpdve)
+    
+    
+    # FOR NAVIGATING WITHIN A SEVEN-TONE SCALE ENVIRONMENT
+    # assumes seven=tone basis (kp established in scale)
+    def dve_degree_list(self):
+        chord = [pt_keypattern.DVE_linear_eq(self.current_kpdve[2], self.current_kpdve[3], i for i in range(self.current_kpdve[4] + 1))]
+        return np.array(chord)
     
     # --------------------------------------------------------------
     def string_description(self):
@@ -207,5 +215,4 @@ class harmony_state():
         a_kpdve = self.current_kpdve.copy()
         a_kpdve[2] = (pt_utils.CONVENTION_DIST[a_kpdve[1]] + 1) % pt_utils.MODVALS[2]
         self.change_kpdve(a_kpdve)
-
 
