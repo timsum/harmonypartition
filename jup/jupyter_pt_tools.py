@@ -25,7 +25,7 @@ import partita_music21
 
 def notegroup_heatmap(notegroup, chromatic=False, title=None):
     np_notegroup = np.array([notegroup])
-    multiple_notegroup_heatmap(np_notegroup, chromatic)
+    multiple_notegroup_heatmap(np_notegroup, chromatic, title=title)
 
 
 def multiple_notegroup_heatmap(notegroup_list, chromatic=False, yticks=[], title=None):
