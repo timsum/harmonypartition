@@ -322,7 +322,7 @@ def circle_conv_function_for_KPDVE(kpdve):
     >>> circle_conv_function_for_KPDVE(np.array([0,0,0,4,3]))
     6
 
-    F_M7
+    F#_M7
     >>> circle_conv_function_for_KPDVE(np.array([0,1,0,4,3]))
     5
     
@@ -339,6 +339,31 @@ def circle_conv_function_for_KPDVE(kpdve):
     pitchval -= pt_utils.single_bit_loc(circle_conv_tonic_for_KPDVE(kpdve))
     
     return pitchval % 7
+
+def scale_conv_degree_for_KPDVE(kpdve):
+    '''
+    np.array(5) -> int
+
+    returns a number 0-6 for function (relative to conventional tonic)
+
+    F_M7 -> as subdominant
+    >>> scale_conv_degree_for_KPDVE(np.array([0,0,0,4,3]))
+    3
+
+    F#_M7 --> as mediant
+    >>> scale_conv_degree_for_KPDVE(np.array([0,1,0,4,3]))
+    6
+    
+    Bb M7 as dominant
+    >>> scale_conv_degree_for_KPDVE(np.array([11,0,2,4,3]))
+    4
+    
+    Bb M7 as tonic
+    >>> scale_conv_degree_for_KPDVE(np.array([11,1,2,4,3]))
+    0
+    '''
+    
+    return (circle_conv_function_for_KPDVE(kpdve) * kpdve[3]) % 7
 
 
 if __name__ == '__main__':

@@ -134,9 +134,13 @@ class harmony_state():
     # FOR NAVIGATING WITHIN A SEVEN-TONE SCALE ENVIRONMENT
     # assumes seven=tone basis (kp established in scale)
     def current_chord_as_scale_degrees(self):
-        chord = [pt_keypattern.DVE_linear_eq((self.current_kpdve[2], self.current_kpdve[3], i) for i in range(self.current_kpdve[4] + 1))]
-        chord = (chord * kpdve[3]) % 7
-        return np.array(chord)
+        chord_build = [np.array([self.current_kdpve[0],self.current_kdpve[1],self.current_kdpve[2],self.current_kdpve[3],i]) for i in range(5)]
+        as_degree = [pt_musicutils.scale_conv_degree_for_KPDVE(a_kpdve) for a_kpdve in chord_build]
+        # get fifth functions from zero
+        #chord = np.array([pt_keypattern.DVE_linear_eq(0, self.current_kpdve[3], i) for i in range(self.current_kpdve[4] + 1)])
+        # convert to scale degree based on voicing
+        #as_degree = (pt_musicutils.scale_conv_degree_for_KPDVE(self.current_kpdve) + chord * self.current_kpdve[3]) % 7
+        return np.array(as_degree) 
     
     # --------------------------------------------------------------
     def string_description(self):
