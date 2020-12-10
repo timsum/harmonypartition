@@ -202,7 +202,7 @@ def ordered_scale_notes_for_KPDVE(kpdve):
     return ordered_chord_notes_for_KPDVE(np.array([kpdve[0], kpdve[1], kpdve[2], 2, 6]))
     
 
-def unfold_ascending(note_array):
+def unfold_ascending(note_array, mod=12):
     '''
     Parameters
     ----------
@@ -216,11 +216,11 @@ def unfold_ascending(note_array):
     >>> unfold_ascending(np.array([ 5,  7,  9, 11,  0,  2,  4]))
     array([ 5,  7,  9, 11, 12, 14, 16])
     '''
-
+    
     ordered_asc = np.copy(note_array)
     for i in range(len(ordered_asc) - 1):
         if ordered_asc[i+1] < ordered_asc[i]:
-            ordered_asc[i+1] = ordered_asc[i+1] + 12
+            ordered_asc[i+1] = ordered_asc[i+1] + mod
 
     return ordered_asc
 
