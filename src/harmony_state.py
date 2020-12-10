@@ -12,6 +12,7 @@ import partita
 import pt_utils
 import pt_musicutils
 import pt_naming_conventions
+import pt_keypattern
 
 class harmony_state():
     '''
