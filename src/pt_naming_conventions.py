@@ -309,12 +309,14 @@ def kpdve_stream_string(kpdve, notegroup):
     hexstring = "0x" + hex(pt_utils.minimal_bin_kpdve(notegroup, kpdve))[2:].zfill(7)
     description_string =  hexstring + " <--> "
     kpstring = format(pt_keypattern.get_binary_KP(kpdve[0], kpdve[1]), "b").zfill(12)
-    description_string += kpstring + " : " 
+    description_string += "mode : " 
+    #description_string += kpstring + " : " 
     tonicstring = conv_tonic_name_for_kpdve(kpdve).rjust(4)
     patternstring = PATTERN_CONVENTIONAL_NAMES[kpdve[1]].ljust(16)
     description_string += tonicstring + " " + patternstring
-    description_string += " === "
-    description_string += format(pt_keypattern.get_binary_KPDVE_chord(kpdve), "b").zfill(12) + " : " 
+    description_string += " <> "
+    #description_string += format(pt_keypattern.get_binary_KPDVE_chord(kpdve), "b").zfill(12) + " : " 
+    description_string += "chord: "
     description_string += chord_root_name_for_KPDVE(kpdve) + " as "  + chord_function_in_key(kpdve).ljust(4)
 
     return description_string
