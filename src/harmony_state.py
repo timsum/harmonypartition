@@ -217,4 +217,9 @@ class harmony_state():
         a_kpdve = self.current_kpdve.copy()
         a_kpdve[2] = (pt_utils.CONVENTION_DIST[a_kpdve[1]] + 1) % pt_utils.MODVALS[2]
         self.change_kpdve(a_kpdve)
+        
+    def current_two(self):
+        a_kpdve = self.current_kpdve.copy()
+        a_kpdve[2] = (pt_utils.CONVENTION_DIST[a_kpdve[1]] + 2) % pt_utils.MODVALS[2]
+        self.change_kpdve(a_kpdve)
 
