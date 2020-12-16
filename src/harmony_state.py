@@ -93,7 +93,6 @@ class harmony_state():
         return True
 
     # ACCESS EXTRAPOLATIONS.
-    
     def current_chord_notes(self):
         return pt_utils.bit_locs(self.current_binary)
     
@@ -150,8 +149,40 @@ class harmony_state():
         Returns
         -------
         String
+
+        >>> kpdve_stream_string(np.array([0,0,0,4,2]), 0b110010000000)
+        hex string:
+        '0022c80 <--> 111111100000 : C Major (tonic) === 110010000000 : F as  IV'
+
         '''
-        return pt_naming_conventions.kpdve_stream_string(self.current_kpdve, self.current_binary)
+        kpdve = self.current_kpdve
+        notegroup = self.current_binary
+
+        # the basic hex string
+        hex_string = "hex string (harmony hash): "
+        hex_string += "0x" + hex(pt_utils.minimal_bin_kpdve(notegroup, kpdve))[2:].zfill(7) + " \n"
+        # div
+        div_string = "\n==-- derived meanings: --==\n"
+        # mode
+        mode_string = "mode: " 
+        tonicstring = pt_naming_conventions.conv_tonic_name_for_kpdve(kpdve).rjust(4)
+        patternstring = pt_naming_conventions.PATTERN_CONVENTIONAL_NAMES[kpdve[1]].ljust(16) + " \n"
+        mode_string += tonicstring + " " + patternstring
+        # chord
+        chord_string = "chord: "
+        chord_string += pt_naming_conventions.chord_root_name_for_KPDVE(kpdve) + " functioning as "  + pt_naming_conventions.chord_function_in_key(kpdve).ljust(4)  + "\n"
+        
+        # chromatic patterns:
+        chord_notes_name_string = ' '.join(pt_naming_conventions.chord_note_names_for_KPDVE(self.current_kpdve))
+        chord_notes_string = "chord notes: " + np.array_str(self.current_chord_notes()) + " : " + chord_notes_name_string + " \n"
+        
+        scale_notes_name_string = ' '.join(pt_naming_conventions.scale_note_names_for_KPDVE(self.current_kpdve))
+        scale_notes_string = "scale notes: " + np.array_str(self.current_scale_notes())  + " : " + scale_notes_name_string + " \n" 
+
+        # in-mode patterns: 
+        mode, disp = self.get_chord_disp_tuple()
+
+        print(hex_string + div_string + mode_string + chord_string + "== chromatic (12-note) locations: \n" + chord_notes_string + scale_notes_string + "== chord/scale degree (7-note) locations: \n")
     
     # --------------------------------------------------------------
     # STANDARD MANIPULATIONS FOR NAVIGATING THE STATE AS A PLAYER...        

@@ -177,6 +177,29 @@ def chord_note_names_for_KPDVE(kpdve):
 
     return notenames
 
+def scale_note_names_for_KPDVE(kpdve):
+    '''
+    ([int] -> [str])
+
+    return a list of notes in a chord
+
+    >>> scale_note_names_for_KPDVE([0,0,0,4,3])
+    ['F', 'G', 'A', 'B', 'C', 'D', 'E']
+
+    >>> scale_note_names_for_KPDVE([0,1,0,3,5])
+    ['F#', 'G', 'A', 'B', 'C', 'D', 'E']
+
+    '''
+    
+    scale_kpdve = [kpdve[0], kpdve[1], kpdve[2], 2, 6]
+    notenames = []
+    for i in range(scale_kpdve[4] + 1):
+        notenames.append(note_name_for_kpdve([scale_kpdve[0], scale_kpdve[1],
+                                              scale_kpdve[2], scale_kpdve[3], i]))
+
+    return notenames
+
+
 
 def circle_fifth_notes(k=0):
     '''
@@ -302,21 +325,21 @@ def kpdve_stream_string(kpdve, notegroup):
 
 
     >>> kpdve_stream_string(np.array([0,0,0,4,2]), 0b110010000000)
-    '0022c80 <--> 111111100000 : C Major (tonic) === 110010000000 : F as  IV'
+    '0x0022c80 <--> 111111100000 :    C Major (tonic)    === 110010000000 : F as IV  '
 
     '''
 
     hexstring = "0x" + hex(pt_utils.minimal_bin_kpdve(notegroup, kpdve))[2:].zfill(7)
     description_string =  hexstring + " <--> "
     kpstring = format(pt_keypattern.get_binary_KP(kpdve[0], kpdve[1]), "b").zfill(12)
-    description_string += "mode : " 
-    #description_string += kpstring + " : " 
+    #description_string += "mode : " 
+    description_string += kpstring + " : " 
     tonicstring = conv_tonic_name_for_kpdve(kpdve).rjust(4)
     patternstring = PATTERN_CONVENTIONAL_NAMES[kpdve[1]].ljust(16)
     description_string += tonicstring + " " + patternstring
-    description_string += " <> "
-    #description_string += format(pt_keypattern.get_binary_KPDVE_chord(kpdve), "b").zfill(12) + " : " 
-    description_string += "chord: "
+    description_string += " === "
+    description_string += format(pt_keypattern.get_binary_KPDVE_chord(kpdve), "b").zfill(12) + " : " 
+    #description_string += "chord: "
     description_string += chord_root_name_for_KPDVE(kpdve) + " as "  + chord_function_in_key(kpdve).ljust(4)
 
     return description_string
