@@ -159,18 +159,18 @@ class harmony_state():
         notegroup = self.current_binary
 
         # the basic hex string
-        hex_string = "hex string (harmony hash): "
+        hex_string = "hex unique id (harmony hash): "
         hex_string += "0x" + hex(pt_utils.minimal_bin_kpdve(notegroup, kpdve))[2:].zfill(7) + " \n"
         # div
         div_string = "\n==-- derived meanings: --==\n"
         # mode
-        mode_string = "conventional mode: " 
+        mode_string = " (conventional) mode: " 
         tonicstring = pt_naming_conventions.conv_tonic_name_for_kpdve(kpdve)
         patternstring = pt_naming_conventions.PATTERN_CONVENTIONAL_NAMES[kpdve[1]] + " \n"
         mode_string += tonicstring + " " + patternstring
         # chord
-        chord_string = "conventional chord: "
-        chord_string += pt_naming_conventions.chord_root_name_for_KPDVE(kpdve) + " functioning as "  + pt_naming_conventions.chord_function_in_key(kpdve).ljust(4)  + "\n"
+        chord_string = "(conventional) chord: "
+        chord_string += pt_naming_conventions.chord_root_name_for_KPDVE(kpdve) + " functioning as "  + pt_naming_conventions.chord_function_in_key(kpdve).ljust(4)  + "\n\n"
         
         # chromatic patterns:
         chord_notes_name_string = ' '.join(pt_naming_conventions.chord_note_names_for_KPDVE(self.current_kpdve))
@@ -181,25 +181,27 @@ class harmony_state():
 
         # in-mode patterns: 
         chord, cdisp = self.get_chord_disp_tuple()
-        chord_raw_string = "   chord starting from zero: " + np.array_str(chord) + " \n"
-        cdisp_raw_string = "root displacement from zero: " + cdisp.astype(str)  + " \n"
+        chord_raw_string = "   chord starting from zero: " + np.array_str(chord)
+        cdisp_raw_string = " starting from: " + cdisp.astype(str)
         
         mode, mdisp = self.get_mode_disp_tuple()
-        mode_raw_string = "    mode starting from zero: " + np.array_str(mode) + " \n"
-        mdisp_raw_string = "root displacement from zero: " + mdisp.astype(str)  + " \n"
+        mode_raw_string = "    mode starting from zero: " + np.array_str(mode)
+        mdisp_raw_string = " starting from : " + mdisp.astype(str)
 
         tonic_scale, tonic_scaledisp = self.get_tonic_mode_disp_tuple()
-        tonic_scale_raw_string = "    mode starting from zero: " + np.array_str(tonic_scale) + " \n"
-        tonic_scaledisp_raw_string = "root displacement from zero: " + tonic_scaledisp.astype(str)  + " \n"        
+        tonic_scale_raw_string = "    tonic scale: " + np.array_str(tonic_scale)
+        tonic_scaledisp_raw_string = " starting from: " + tonic_scaledisp.astype(str)    
         
         print(hex_string + div_string + mode_string + chord_string 
-              + "== chromatic (12-note) locations: \n" 
-              + chord_notes_string + scale_notes_string 
+              + "== chromatic (12-note pitch-class) locations: \n" 
+              + chord_notes_string + scale_notes_string + "\n"
               + "== modes and chords over roots (modal scales) \n"
-              + chord_raw_string + cdisp_raw_string
-              + mode_raw_string + mdisp_raw_string
-              + tonic_scale_raw_string + tonic_scaledisp_raw_string
-              + "== chord/scale degree (7-note) locations: \n")
+              + chord_raw_string + cdisp_raw_string + " (" + chord_notes_name_string +")" + "\n"
+              + mode_raw_string + mdisp_raw_string + " (" + scale_notes_name_string +")"  + "\n"
+              + tonic_scale_raw_string + tonic_scaledisp_raw_string + "\n\n"
+              + "== chord/scale degree (7-note) locations: " 
+              + np.array_str(self.current_chord_as_scale_degrees())
+             )
 
         
         
