@@ -341,7 +341,7 @@ def kpdve_stream_string(kpdve, notegroup):
     description_string += format(pt_keypattern.get_binary_KPDVE_chord(kpdve), "b").zfill(12) + " : " 
     #description_string += "chord: "
     description_string += chord_root_name_for_KPDVE(kpdve) + " as "  + chord_function_in_key(kpdve).ljust(4)
-
+    
     return description_string
 
 

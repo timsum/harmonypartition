@@ -164,12 +164,12 @@ class harmony_state():
         # div
         div_string = "\n==-- derived meanings: --==\n"
         # mode
-        mode_string = "mode: " 
-        tonicstring = pt_naming_conventions.conv_tonic_name_for_kpdve(kpdve).rjust(4)
-        patternstring = pt_naming_conventions.PATTERN_CONVENTIONAL_NAMES[kpdve[1]].ljust(16) + " \n"
+        mode_string = "conventional mode: " 
+        tonicstring = pt_naming_conventions.conv_tonic_name_for_kpdve(kpdve)
+        patternstring = pt_naming_conventions.PATTERN_CONVENTIONAL_NAMES[kpdve[1]] + " \n"
         mode_string += tonicstring + " " + patternstring
         # chord
-        chord_string = "chord: "
+        chord_string = "conventional chord: "
         chord_string += pt_naming_conventions.chord_root_name_for_KPDVE(kpdve) + " functioning as "  + pt_naming_conventions.chord_function_in_key(kpdve).ljust(4)  + "\n"
         
         # chromatic patterns:
@@ -180,9 +180,29 @@ class harmony_state():
         scale_notes_string = "scale notes: " + np.array_str(self.current_scale_notes())  + " : " + scale_notes_name_string + " \n" 
 
         # in-mode patterns: 
-        mode, disp = self.get_chord_disp_tuple()
+        chord, cdisp = self.get_chord_disp_tuple()
+        chord_raw_string = "   chord starting from zero: " + np.array_str(chord) + " \n"
+        cdisp_raw_string = "root displacement from zero: " + cdisp.astype(str)  + " \n"
+        
+        mode, mdisp = self.get_mode_disp_tuple()
+        mode_raw_string = "    mode starting from zero: " + np.array_str(mode) + " \n"
+        mdisp_raw_string = "root displacement from zero: " + mdisp.astype(str)  + " \n"
 
-        print(hex_string + div_string + mode_string + chord_string + "== chromatic (12-note) locations: \n" + chord_notes_string + scale_notes_string + "== chord/scale degree (7-note) locations: \n")
+        tonic_scale, tonic_scaledisp = self.get_tonic_mode_disp_tuple()
+        tonic_scale_raw_string = "    mode starting from zero: " + np.array_str(tonic_scale) + " \n"
+        tonic_scaledisp_raw_string = "root displacement from zero: " + tonic_scaledisp.astype(str)  + " \n"        
+        
+        print(hex_string + div_string + mode_string + chord_string 
+              + "== chromatic (12-note) locations: \n" 
+              + chord_notes_string + scale_notes_string 
+              + "== modes and chords over roots (modal scales) \n"
+              + chord_raw_string + cdisp_raw_string
+              + mode_raw_string + mdisp_raw_string
+              + tonic_scale_raw_string + tonic_scaledisp_raw_string
+              + "== chord/scale degree (7-note) locations: \n")
+
+        
+        
     
     # --------------------------------------------------------------
     # STANDARD MANIPULATIONS FOR NAVIGATING THE STATE AS A PLAYER...        
