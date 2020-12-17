@@ -92,6 +92,16 @@ class harmony_state():
         
         return True
 
+
+    def change_from_midi(self, midi_list, v_opt=0):
+        notegroup = 0
+        for midi_note in midi_list:
+            notegroup |= pt_utils.LEFT_BIT >> (midi_note % 12)
+
+        return self.change_notegroup(self, notegroup, v_opt=v_opt)
+        
+
+
     # ACCESS EXTRAPOLATIONS.
     def current_chord_notes(self):
         return pt_utils.bit_locs(self.current_binary)
