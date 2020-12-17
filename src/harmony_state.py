@@ -156,6 +156,7 @@ class harmony_state():
 
         '''
         kpdve = self.current_kpdve
+        core_kpdve = np.array([self.current_kpdve[0], 0, 0, 0, 0])
         notegroup = self.current_binary
 
         # the basic hex string
@@ -168,9 +169,16 @@ class harmony_state():
         tonicstring = pt_naming_conventions.conv_tonic_name_for_kpdve(kpdve)
         patternstring = pt_naming_conventions.PATTERN_CONVENTIONAL_NAMES[kpdve[1]] + " \n"
         mode_string += tonicstring + " " + patternstring
+        
         # chord
         chord_string = "(conventional) chord: "
-        chord_string += pt_naming_conventions.chord_root_name_for_KPDVE(kpdve) + " functioning as "  + pt_naming_conventions.chord_function_in_key(kpdve).ljust(4)  + "\n\n"
+        chord_string += pt_naming_conventions.chord_root_name_for_KPDVE(kpdve) + " functioning as "  + pt_naming_conventions.chord_function_in_key(kpdve).ljust(4)  + "\n"
+        
+        # essential key
+        lyd_string = "(non-entropic) base: "
+        lyd_tonic_string = pt_naming_conventions.note_name_for_kpdve(core_kpdve)
+        lyd_patternstring = pt_naming_conventions.MODE_NAMES[core_kpdve[1]] + " \n"
+        lyd_string += lyd_tonic_string + " " + lyd_patternstring
         
         # chromatic patterns:
         chord_notes_name_string = ' '.join(pt_naming_conventions.chord_note_names_for_KPDVE(self.current_kpdve))
@@ -190,17 +198,20 @@ class harmony_state():
 
         tonic_scale, tonic_scaledisp = self.get_tonic_mode_disp_tuple()
         tonic_scale_raw_string = "    tonic scale: " + np.array_str(tonic_scale)
-        tonic_scaledisp_raw_string = " starting from: " + tonic_scaledisp.astype(str)    
+        tonic_scaledisp_raw_string = " starting from: " + tonic_scaledisp.astype(str)   
         
-        print(hex_string + div_string + mode_string + chord_string 
+        degrees_string = np.array_str(self.current_chord_as_scale_degrees())
+        
+        print(hex_string + div_string + mode_string + chord_string + lyd_string  + "\n"
               + "== chromatic (12-note pitch-class) locations: \n" 
               + chord_notes_string + scale_notes_string + "\n"
               + "== modes and chords over roots (modal scales) \n"
               + chord_raw_string + cdisp_raw_string + " (" + chord_notes_name_string +")" + "\n"
               + mode_raw_string + mdisp_raw_string + " (" + scale_notes_name_string +")"  + "\n"
+              + "displacement/mode *** for DAW settings: ***\n"
               + tonic_scale_raw_string + tonic_scaledisp_raw_string + "\n\n"
               + "== chord/scale degree (7-note) locations: " 
-              + np.array_str(self.current_chord_as_scale_degrees())
+              + degrees_string
              )
 
         
