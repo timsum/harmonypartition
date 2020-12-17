@@ -98,7 +98,7 @@ class harmony_state():
         for midi_note in midi_list:
             notegroup |= pt_utils.LEFT_BIT >> (midi_note % 12)
 
-        return self.change_notegroup(self, notegroup, v_opt=v_opt)
+        return self.change_notegroup(notegroup, v_opt=v_opt)
         
 
 
