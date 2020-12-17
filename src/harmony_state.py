@@ -199,15 +199,15 @@ class harmony_state():
 
         # in-mode patterns: 
         chord, cdisp = self.get_chord_disp_tuple()
-        chord_raw_string = "   chord measured from root: " + np.array_str(chord)
+        chord_raw_string = "   chord measured from root: " + np.array_str(chord) + " \n"
         cdisp_raw_string = " root: " + cdisp.astype(str)
         
         mode, mdisp = self.get_mode_disp_tuple()
-        mode_raw_string = "    mode measured from chord root: " + np.array_str(mode)
+        mode_raw_string = "    mode measured from chord root: " + np.array_str(mode) + " \n"
         mdisp_raw_string = " root : " + mdisp.astype(str)
 
         tonic_scale, tonic_scaledisp = self.get_tonic_mode_disp_tuple()
-        tonic_scale_raw_string = "    tonic scale: " + np.array_str(tonic_scale)
+        tonic_scale_raw_string = "    tonic scale: " + np.array_str(tonic_scale)  + " \n"
         tonic_scaledisp_raw_string = " starting from: " + tonic_scaledisp.astype(str)   
         
         degrees_string = np.array_str(self.current_chord_as_scale_degrees())
