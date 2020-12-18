@@ -172,6 +172,8 @@ class harmony_state():
         # the basic hex string
         hex_string = "hex unique id (harmony hash): "
         hex_string += "0x" + hex(pt_utils.minimal_bin_kpdve(notegroup, kpdve))[2:].zfill(7) + " \n"
+        kpdve_string = np.array_str(self.current_kpdve) + " \n"
+        bin_string = bin(self.current_binary).zfill(12)
         # div
         div_string = "\n==-- derived meanings: --==\n"
         # mode
@@ -212,16 +214,18 @@ class harmony_state():
         
         degrees_string = np.array_str(self.current_chord_as_scale_degrees())
         
-        print(hex_string + div_string + mode_string + chord_string + lyd_string  + "\n"
-              + "== chromatic (12-note pitch-class) locations: \n" 
-              + chord_notes_string + scale_notes_string + "\n"
-              + "== modes and chords over roots (modal scales) \n"
-              + chord_raw_string + cdisp_raw_string + " (" + chord_notes_name_string +")" + "\n"
-              + mode_raw_string + mdisp_raw_string + " (" + scale_notes_name_string +")"  + "\n"
-              + "displacement/mode *** for DAW settings: ***\n"
-              + tonic_scale_raw_string + tonic_scaledisp_raw_string + "\n\n"
-              + "== chord/scale degree (7-note) locations: " 
-              + degrees_string
+        print(hex_string 
+                + kpdve_string + bin_string
+                + div_string + mode_string + chord_string + lyd_string  + "\n"
+                + "== chromatic (12-note pitch-class) locations: \n" 
+                + chord_notes_string + scale_notes_string + "\n"
+                + "== modes and chords over roots (modal scales) \n"
+                + chord_raw_string + cdisp_raw_string + " (" + chord_notes_name_string +")" + "\n"
+                + mode_raw_string + mdisp_raw_string + " (" + scale_notes_name_string +")"  + "\n"
+                + "displacement/mode *** for DAW settings: ***\n"
+                + tonic_scale_raw_string + tonic_scaledisp_raw_string + "\n\n"
+                + "== chord/scale degree (7-note) locations: " 
+                + degrees_string
              )
 
         
