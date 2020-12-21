@@ -25,7 +25,7 @@ import partita_music21
 
 def notegroup_heatmap(notegroup, chromatic=False, title=None):
     np_notegroup = np.array([notegroup])
-    multiple_notegroup_heatmap(np_notegroup, chromatic, title=title)
+    return multiple_notegroup_heatmap(np_notegroup, chromatic, title=title)
 
 
 def multiple_notegroup_heatmap(notegroup_list, chromatic=False, yticks=[], title=None):
@@ -51,6 +51,8 @@ def multiple_notegroup_heatmap(notegroup_list, chromatic=False, yticks=[], title
     
     ax.set_title(title, fontsize=16)
     plt.show()
+    
+    return np_notegroup_list
 
 
 def horizontal_notegroup_heatmap(notegroup_list, chromatic=False, xticks=[], title=None):
@@ -77,13 +79,16 @@ def horizontal_notegroup_heatmap(notegroup_list, chromatic=False, xticks=[], tit
     
     ax.set_title(title, fontsize=16)
     plt.show()
+    
+    return np_notegroup_list
 
 def heatmap_for_midi_file(filename, key_orientation=np.array([0,0,0,4,3])):
     bin_a, kpdve_a = partita_music21.analyze_notation_file(filename, key_orientation)
     bin_seq = [pt_keypattern.get_binary_KPDVE_chord(a_kpdve) for a_kpdve in kpdve_a]
     # funcs = [pt_naming_conventions.chord_function_in_key(a_kpdve) for a_kpdve in kpdve_a]
-    horizontal_notegroup_heatmap(bin_seq)
-    return bin_a
+    return horizontal_notegroup_heatmap(bin_seq)
+    
+    # return bin_a
 
 def d_val_heatmap():
     # should go dark for higher d vals 
