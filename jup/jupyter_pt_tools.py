@@ -10,6 +10,7 @@ Created on Thu Oct 22 14:55:26 2020
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sb
+from scipy.io.wavfile import write
 
 import IPython.display as ipd
 
@@ -292,3 +293,7 @@ def link_ordered_wavestep_sequences(notegroup_list, Fs=4000, duration=2, chromat
         signal = np.concatenate((signal, ordered_notegroup_wavestep(a_notegroup, Fs=Fs, duration=stepdur, chromatic=chromatic, from_middle_c=from_middle_c)), axis=0)
 
     return signal
+
+
+def norm_wave_write(seq, filename, sr=4000):
+    write(filename, sr, seq/(np.max(seq)*2.0))
