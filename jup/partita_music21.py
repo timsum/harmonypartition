@@ -48,16 +48,26 @@ def analyze_parsed_notation_file(parsedfile, key_orientation=np.array([0,0,0,4,2
 
     bin_analysis = np.zeros(len(pitch_classes), dtype=int)
     for i, pc_array in enumerate(pitch_classes):
-        bin_analysis[i] = pt_utils.binary_note_for_chord(pc_array)
+        bin_analysis[i] = pt_utils.binary_note_for_chord(pc_array) 
 
-    reader_state = harmony_state.harmony_state(start_kpdve=key_orientation)
+#    reader_state = harmony_state.harmony_state(start_kpdve=key_orientation)
     
-    kpdve_chroma = []
-    for ng in bin_analysis:
-        reader_state.change_notegroup(ng)
-        kpdve_chroma.append(reader_state.current_kpdve)
+#    kpdve_chroma = []
+#    for ng in bin_analysis:
+#        reader_state.change_notegroup(ng)
+#        kpdve_chroma.append(reader_state.current_kpdve)
 
-    return bin_analysis, np.array(kpdve_chroma)
+#    return bin_analysis, np.array(kpdve_chroma)
+
+    h = harmony_state.harmony_state(start_kpdve=key_orientation)
+    kpdve_chroma = np.zeros((bin_analysis.shape[0], 5), dtype=int)
+
+    for i, ng in np.ndenumerate(bin_analysis):
+        h.change_notegroup(ng)
+        kpdve_chroma[i] = np.array(h.current_kpdve.copy())
+    
+    return bin_analysis, kpdve_chroma
+
 
 def analyze_notation_file(filename, key_orientation=np.array([0,0,0,4,2]), beats_per_slice=0.25):
     parsedfile = music21.converter.parse(filename)

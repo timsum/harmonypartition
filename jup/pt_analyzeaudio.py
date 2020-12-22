@@ -178,7 +178,6 @@ def graph_waveform_kpdve_combo(y, sr, bin_a, kpdve_a):
     # PYPLOT
     # FIGSIZE IS HERE ADJUSTED TO BEST SHOW ON JUPYTER. NO FIGSIZE IS BEST FOR WEB
     fig = plt.figure(frameon=False, figsize=(12, 2))
-#    fig = plt.figure(frameon=False)
 
     plt.style.use('dark_background')
 
@@ -204,14 +203,46 @@ def graph_waveform_kpdve_combo(y, sr, bin_a, kpdve_a):
                yticklabels=False, 
                       cmap='hsv', 
                       cbar=False, 
-                      vmin=0)
+                      vmin=0,
+                      vmax=12)
     
     plt.show()
-            
+
+
+def graph_kpdve(kpdve_a):
+    fig = plt.figure(frameon=False, figsize=(12, 1))
+
+    plt.style.use('dark_background')
+
+    g_spec = gridspec.GridSpec(nrows=25, ncols=1, figure=fig)
+    g_spec.update(wspace=0, hspace=0)
+    
+    plt.subplots_adjust(0,0,1,1,0,0)
+    for ax in fig.axes:
+        ax.axis('off')
+        ax.margins(0,0)
+        ax.xaxis.set_major_locator(plt.NullLocator())
+        ax.yaxis.set_major_locator(plt.NullLocator())
+        
+    ax_kpdve = fig.add_subplot(g_spec[:])
+    graphable = kpdve_list_to_heatmap_graphable(kpdve_a).T
+    graphable = np.flip(graphable, axis=0)
+    sb.heatmap(graphable,
+               ax=ax_kpdve,
+               xticklabels=False,
+               yticklabels=False, 
+                      cmap='hsv', 
+                      cbar=False, 
+                      vmin=0,
+                      vmax=12)
+        
+    plt.show()
+
 def kpdve_list_to_heatmap_graphable(kpdve_list):
     return np.array([KPDVE_to_heatmap_display(a_kpdve) for a_kpdve in kpdve_list])
 
-# HEATMAP SIMPLE
+
+# HEATMAP SIMPLE -- NOT SIMPLE, THIS FUNCTION IS FUCKED, TALK IT THROUGH...
 def KPDVE_to_heatmap_display(a_kpdve):
     '''
     returns a vector of length 4 with [K,P, D, E ordered chord notes... up to 7] 
@@ -232,6 +263,7 @@ def KPDVE_to_heatmap_display(a_kpdve):
     p = (pt_utils.single_bit_loc(pt_musicutils.circle_conv_tonic_for_KPDVE(a_kpdve)) + 11) % 12
     d = (pt_utils.single_bit_loc(pt_musicutils.circle_root_note_for_KPDVE(a_kpdve)) + 11) % 12
     e = (pt_utils.single_bit_loc(pt_musicutils.circle_ext_note_for_KPDVE(a_kpdve)) + 11) % 12
-    kpde = np.array([k, p, d, d,d,d,d,d,d,d,d,d,d,d,d,d, e]) # separate the hidden state measurements for visual clarity
+    
+    kpde = np.array([k, p, d,d,d,d,d,d,d,d,d,d,d,d,d,d, e]) # separate the hidden state measurements for visual clarity
 
     return kpde
