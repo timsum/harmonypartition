@@ -10,7 +10,6 @@ import music21
 import numpy as np
 
 import pt_utils
-import pt_graphics
 import harmony_state
 
 # BARE=BONES integration with music 21
