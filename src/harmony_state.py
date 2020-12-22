@@ -83,6 +83,7 @@ class harmony_state():
             return False
         
         if ((notegroup & self.current_binary) == notegroup): # NO CHANGE IN CHORD IS *NECESSARY*
+            self.current_binary = notegroup
             return False
 
         self.current_kpdve = partita.analyze_binary_input_for_closest_KPDVE(notegroup, self.current_kpdve)
