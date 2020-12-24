@@ -8,6 +8,7 @@ Created on Tue Nov 24 21:47:41 2020
 
 import numpy as np
 import librosa
+import librosa.display
 
 import harmony_state
 import pt_utils

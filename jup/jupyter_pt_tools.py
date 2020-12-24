@@ -21,7 +21,7 @@ import pt_keypattern
 
 # from previous pypartita dev
 # depends also on pt_graphics... but doesn't have to...
-import partita_music21
+import pt_analyzeaudio
 
 
 def notegroup_heatmap(notegroup, chromatic=False, title=None):
@@ -84,7 +84,7 @@ def horizontal_notegroup_heatmap(notegroup_list, chromatic=False, xticks=[], tit
     return np_notegroup_list
 
 def heatmap_for_midi_file(filename, key_orientation=np.array([0,0,0,4,3])):
-    bin_a, kpdve_a = partita_music21.analyze_notation_file(filename, key_orientation)
+    bin_a, kpdve_a = pt_analyzeaudio.analyze_notation_file(filename, key_orientation)
     bin_seq = [pt_keypattern.get_binary_KPDVE_chord(a_kpdve) for a_kpdve in kpdve_a]
     # funcs = [pt_naming_conventions.chord_function_in_key(a_kpdve) for a_kpdve in kpdve_a]
     return horizontal_notegroup_heatmap(bin_seq)
