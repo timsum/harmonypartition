@@ -296,4 +296,4 @@ def link_ordered_wavestep_sequences(notegroup_list, Fs=4000, duration=2, chromat
 
 
 def norm_wave_write(seq, filename, sr=4000):
-    write(filename, sr, seq/(np.max(seq)*2.0))
+    write(filename, sr, seq/(np.max(seq)*3.0))
