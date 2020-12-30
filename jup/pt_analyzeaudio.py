@@ -9,6 +9,7 @@ Created on Tue Nov 24 21:47:41 2020
 import numpy as np
 import librosa
 import librosa.display
+from scipy.special import softmax
 
 import harmony_state
 import pt_utils
@@ -87,16 +88,36 @@ def chroma_to_binary_value(chroma_stripe, threshold=0.5):
     -------
     12-bit notegroup integer
 
+    >>> chroma_to_binary_value(np.array([0,0,0,0,0,2,0,0,0,0,0,0]))
+    64
     '''
     notegroup = 0
     count = 0
     
-    for a_val in chroma_stripe:
-        if a_val > threshold :
-            notegroup |= pt_utils.LEFT_BIT >> count
-        count += 1
-    return notegroup
-
+    # experimental from here... try with graph?
+    softmaxed = chroma_stripe/np.sum(chroma_stripe)
+    argsorted_desc = np.argsort(softmaxed)[::-1]
+    
+    
+    total = 0.0
+    note_count = 0
+    for an_index in argsorted_desc:
+        total += softmaxed[an_index]
+        note_count += 1
+        if total > threshold:
+            break
+  
+    return pt_utils.binary_note_for_chord(argsorted_desc[:note_count])
+    
+    
+#     for a_val in chroma_stripe:
+#         if a_val > threshold :
+#             notegroup |= pt_utils.LEFT_BIT >> count
+#         count += 1
+        
+#     return notegroup
+    
+    
 # 1AA
 def analyze_chroma_list(chroma, threshold=0.5, key_orientation=np.array([0,0,0,4,2])):
     '''
@@ -268,3 +289,7 @@ def KPDVE_to_heatmap_display(a_kpdve):
     kpde = np.array([k, p, d,d,d,d,d,d,d,d,d,d,d,d,d,d, e]) # separate the hidden state measurements for visual clarity
 
     return kpde
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
