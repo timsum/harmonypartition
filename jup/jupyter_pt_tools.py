@@ -127,7 +127,7 @@ def freq_for_circle_pitch_num(pitchnum):
 # WAVES
 # =============================================================================
     
-def notegroup_wavepile(notegroup, Fs=4000, duration=2, chromatic=False, from_middle_c=0):
+def notegroup_wavepile(notegroup, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
     ng = notegroup
     if (chromatic == False):
         ng = pt_utils.f_circle_to_c_chrom(ng)
@@ -137,7 +137,7 @@ def notegroup_wavepile(notegroup, Fs=4000, duration=2, chromatic=False, from_mid
     return ordered_notegroup_wavepile(notenums, Fs=Fs, duration=duration, chromatic=chromatic, from_middle_c=from_middle_c)
 
 
-def ordered_notegroup_wavepile(notenums, Fs=4000, duration=2, chromatic=False, from_middle_c=0):
+def ordered_notegroup_wavepile(notenums, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
     t = np.linspace(0, duration, int(Fs * duration))
 
     signal = np.zeros_like(t)
@@ -147,7 +147,7 @@ def ordered_notegroup_wavepile(notenums, Fs=4000, duration=2, chromatic=False, f
     return signal
 
 
-def notegroup_wavestep(notegroup, Fs=4000, duration=2, chromatic=False, from_middle_c=0):
+def notegroup_wavestep(notegroup, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
     ng = notegroup
     if (chromatic == False):
         ng = pt_utils.f_circle_to_c_chrom(ng)
@@ -157,7 +157,7 @@ def notegroup_wavestep(notegroup, Fs=4000, duration=2, chromatic=False, from_mid
     return ordered_notegroup_wavestep(notenums, Fs=Fs, duration=duration, chromatic=chromatic, from_middle_c=from_middle_c)
 
 
-def ordered_notegroup_wavestep(notenums, Fs=4000, duration=2, chromatic=False, from_middle_c=0):
+def ordered_notegroup_wavestep(notenums, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
     stepdur = duration/len(notenums)
     steplength = int(Fs * stepdur)
     
@@ -171,7 +171,7 @@ def ordered_notegroup_wavestep(notenums, Fs=4000, duration=2, chromatic=False, f
     return signal
 
 
-def link_wavepile_sequences(notegroup_list, Fs=4000, duration=2, chromatic=False, from_middle_c=0):
+def link_wavepile_sequences(notegroup_list, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
     '''
     return a wave file with the signals in sequence
 
@@ -202,7 +202,7 @@ def link_wavepile_sequences(notegroup_list, Fs=4000, duration=2, chromatic=False
     return signal
 
 
-def link_ordered_wavepile_sequences(notegroup_list, Fs=4000, duration=2, chromatic=False, from_middle_c=0):
+def link_ordered_wavepile_sequences(notegroup_list, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
     '''
     return a wave file with the signals in sequence
 
@@ -233,7 +233,7 @@ def link_ordered_wavepile_sequences(notegroup_list, Fs=4000, duration=2, chromat
     return signal
 
 
-def link_wavestep_sequences(notegroup_list, Fs=4000, duration=2, chromatic=False, from_middle_c=0):
+def link_wavestep_sequences(notegroup_list, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
     '''
     return a wave file with the signals in sequence
 
@@ -264,7 +264,7 @@ def link_wavestep_sequences(notegroup_list, Fs=4000, duration=2, chromatic=False
     return signal
 
 
-def link_ordered_wavestep_sequences(notegroup_list, Fs=4000, duration=2, chromatic=False, from_middle_c=0):
+def link_ordered_wavestep_sequences(notegroup_list, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
     '''
     return a wave file with the signals in sequence
 
@@ -295,6 +295,6 @@ def link_ordered_wavestep_sequences(notegroup_list, Fs=4000, duration=2, chromat
     return signal
 
 
-def norm_wave_write(seq, filename, sr=4000):
+def norm_wave_write(seq, filename, sr=44100):
     seq /= seq.max()*1.5
     write(filename, sr, seq)
