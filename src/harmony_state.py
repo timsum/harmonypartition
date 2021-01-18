@@ -126,7 +126,7 @@ class harmony_state():
     
     def current_conv_tonic(self):
         return pt_utils.bit_locs(pt_musicutils.chrom_conv_tonic_for_KPDVE(self.current_kpdve))[0]
-    
+
     
     # RAW CHORDS/MODES WITH A DISPLACEMENT, TO INTERACT WITH SCALE/KEY-BASED ENVIRONMENTS (e.g. FoxDot)
     # assumes chromatic basis
@@ -146,6 +146,32 @@ class harmony_state():
         chord = np.array([pt_keypattern.DVE_linear_eq(0, self.current_kpdve[3], i) for i in range(self.current_kpdve[4] + 1)])
         as_degree = (chord * self.current_kpdve[3]) % 7
         return (pt_musicutils.scale_conv_degree_for_KPDVE(self.current_kpdve) + np.array(as_degree)) % 7
+    
+    
+    # string descriptions individual
+    def current_hex_string(self):
+        return "0x" + hex(pt_utils.minimal_bin_kpdve(self.current_binary, self.current_kpdve))[2:].zfill(7)
+    
+    def current_conv_tonic_string(self):
+        return pt_naming_conventions.conv_tonic_name_for_kpdve(self.current_kpdve)
+    
+    def current_conv_pattern_string(self):
+        return pt_naming_conventions.PATTERN_CONVENTIONAL_NAMES[self.current_kpdve[1]]
+    
+    def current_conv_mode_complete(self):
+        return self.current_conv_tonic_string() + " " + self.current_conv_pattern_string()
+    
+    def current_root_string(self):
+        return pt_naming_conventions.chord_root_name_for_KPDVE(self.current_kpdve)
+    
+    def current_function_string(self):
+        return pt_naming_conventions.chord_function_in_key(self.current_kpdve)
+    
+    def current_chord_notes_string(self):
+        return ' '.join(pt_naming_conventions.chord_note_names_for_KPDVE(self.current_kpdve))
+    
+    
+    
     
     # --------------------------------------------------------------
     def string_description(self):
