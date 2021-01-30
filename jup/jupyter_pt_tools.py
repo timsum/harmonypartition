@@ -24,6 +24,19 @@ import pt_keypattern
 import pt_analyzeaudio
 
 
+just_freqs = np.array([1.0,
+             1.5,  
+             1.125,  
+             1.6875,  
+             1.265625,  
+             1.8984375,  
+             1.423828125,  
+             1.06787109375,  
+             1.601806640625,  
+             1.20135498046875,  
+             1.802032470703125,  
+             1.3515243530273438])
+
 def notegroup_heatmap(notegroup, chromatic=False, title=None):
     np_notegroup = np.array([notegroup])
     return multiple_notegroup_heatmap(np_notegroup, chromatic, title=title)
@@ -108,56 +121,51 @@ def switch_chroma(chroma):
     return np.roll(chr_switched, 1, axis=0)
 
 
-def freq_for_chrom_pitchnum(pitchnum, from_middle_c=0):
+def freq_for_chrom_pitchnum(pitchnum, from_middle_c=0, temperament="equal"):
     '''
     Returns a frequency value in the octave above middle C for a chromatic number 0-11
     '''
     middle_c_freq = 262
+    if (temperament == "just"):
+        return middle_c_freq * just_freqs[(pitchnum * 7)  % 12]
     return middle_c_freq * pow(2, pitchnum/12) * pow(2, from_middle_c)
 
-
-def freq_for_circle_pitch_num(pitchnum):
-    '''
-    get a pure 3/2 ratio pitch
-
-    '''
-    # DO THIS LATER!!!
     
 # =============================================================================
 # WAVES
 # =============================================================================
     
-def notegroup_wavepile(notegroup, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
+def notegroup_wavepile(notegroup, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal"):
     ng = notegroup
     if (chromatic == False):
         ng = pt_utils.f_circle_to_c_chrom(ng)
         
     notenums = pt_utils.bit_locs(ng)
         
-    return ordered_notegroup_wavepile(notenums, Fs=Fs, duration=duration, chromatic=chromatic, from_middle_c=from_middle_c)
+    return ordered_notegroup_wavepile(notenums, Fs=Fs, duration=duration, chromatic=chromatic, from_middle_c=from_middle_c, temperament=temperament)
 
 
-def ordered_notegroup_wavepile(notenums, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
+def ordered_notegroup_wavepile(notenums, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal"):
     t = np.linspace(0, duration, int(Fs * duration))
 
     signal = np.zeros_like(t)
     for a_note in notenums:
-        signal = signal + np.sin(2 * np.pi * freq_for_chrom_pitchnum(a_note, from_middle_c=from_middle_c) * t)
+        signal = signal + np.sin(2 * np.pi * freq_for_chrom_pitchnum(a_note, from_middle_c=from_middle_c, temperament=temperament) * t)
         
     return signal
 
 
-def notegroup_wavestep(notegroup, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
+def notegroup_wavestep(notegroup, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal"):
     ng = notegroup
     if (chromatic == False):
         ng = pt_utils.f_circle_to_c_chrom(ng)
         
     notenums = pt_utils.bit_locs(ng)
         
-    return ordered_notegroup_wavestep(notenums, Fs=Fs, duration=duration, chromatic=chromatic, from_middle_c=from_middle_c)
+    return ordered_notegroup_wavestep(notenums, Fs=Fs, duration=duration, chromatic=chromatic, from_middle_c=from_middle_c, temperament=temperament)
 
 
-def ordered_notegroup_wavestep(notenums, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
+def ordered_notegroup_wavestep(notenums, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal"):
     stepdur = duration/len(notenums)
     steplength = int(Fs * stepdur)
     
@@ -166,12 +174,12 @@ def ordered_notegroup_wavestep(notenums, Fs=44100, duration=2, chromatic=False, 
 
     signal = np.zeros_like(t_whole)
     for i, a_note in enumerate(notenums):
-        signal[i*steplength:(i+1)*steplength] = np.sin(2 * np.pi * freq_for_chrom_pitchnum(a_note, from_middle_c=from_middle_c) * t)
+        signal[i*steplength:(i+1)*steplength] = np.sin(2 * np.pi * freq_for_chrom_pitchnum(a_note, from_middle_c=from_middle_c, temperament=temperament) * t)
         
     return signal
 
 
-def link_wavepile_sequences(notegroup_list, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
+def link_wavepile_sequences(notegroup_list, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal"):
     '''
     return a wave file with the signals in sequence
 
@@ -197,12 +205,12 @@ def link_wavepile_sequences(notegroup_list, Fs=44100, duration=2, chromatic=Fals
     signal = np.empty(0)
     
     for i, a_notegroup in enumerate(notegroup_list):
-        signal = np.concatenate((signal, notegroup_wavepile(a_notegroup, Fs=Fs, duration=stepdur, chromatic=chromatic, from_middle_c=from_middle_c)), axis=0)
+        signal = np.concatenate((signal, notegroup_wavepile(a_notegroup, Fs=Fs, duration=stepdur, chromatic=chromatic, from_middle_c=from_middle_c, temperament=temperament)), axis=0)
 
     return signal
 
 
-def link_ordered_wavepile_sequences(notegroup_list, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
+def link_ordered_wavepile_sequences(notegroup_list, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal"):
     '''
     return a wave file with the signals in sequence
 
@@ -228,12 +236,12 @@ def link_ordered_wavepile_sequences(notegroup_list, Fs=44100, duration=2, chroma
     signal = np.empty(0)
     
     for i, a_notegroup in enumerate(notegroup_list):
-        signal = np.concatenate((signal, ordered_notegroup_wavepile(a_notegroup, Fs=Fs, duration=stepdur, chromatic=chromatic, from_middle_c=from_middle_c)), axis=0)
+        signal = np.concatenate((signal, ordered_notegroup_wavepile(a_notegroup, Fs=Fs, duration=stepdur, chromatic=chromatic, from_middle_c=from_middle_c, temperament=temperament)), axis=0)
 
     return signal
 
 
-def link_wavestep_sequences(notegroup_list, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
+def link_wavestep_sequences(notegroup_list, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal"):
     '''
     return a wave file with the signals in sequence
 
@@ -259,12 +267,12 @@ def link_wavestep_sequences(notegroup_list, Fs=44100, duration=2, chromatic=Fals
     signal = np.empty(0)
     
     for i, a_notegroup in enumerate(notegroup_list):
-        signal = np.concatenate((signal, notegroup_wavestep(a_notegroup, Fs=Fs, duration=stepdur, chromatic=chromatic, from_middle_c=from_middle_c)), axis=0)
+        signal = np.concatenate((signal, notegroup_wavestep(a_notegroup, Fs=Fs, duration=stepdur, chromatic=chromatic, from_middle_c=from_middle_c, temperament=temperament)), axis=0)
 
     return signal
 
 
-def link_ordered_wavestep_sequences(notegroup_list, Fs=44100, duration=2, chromatic=False, from_middle_c=0):
+def link_ordered_wavestep_sequences(notegroup_list, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal"):
     '''
     return a wave file with the signals in sequence
 
@@ -290,7 +298,7 @@ def link_ordered_wavestep_sequences(notegroup_list, Fs=44100, duration=2, chroma
     signal = np.empty(0)
     
     for i, a_notegroup in enumerate(notegroup_list):
-        signal = np.concatenate((signal, ordered_notegroup_wavestep(a_notegroup, Fs=Fs, duration=stepdur, chromatic=chromatic, from_middle_c=from_middle_c)), axis=0)
+        signal = np.concatenate((signal, ordered_notegroup_wavestep(a_notegroup, Fs=Fs, duration=stepdur, chromatic=chromatic, from_middle_c=from_middle_c, temperament=temperament)), axis=0)
 
     return signal
 
