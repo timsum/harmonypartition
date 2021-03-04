@@ -37,6 +37,12 @@ just_freqs = np.array([1.0,
              1.802032470703125,  
              1.3515243530273438])
 
+def numpy_array_by_circleindex(np_array):
+    return np.array([(arr_val * i)/12.0 for i, arr_val in enumerate(np_array)])
+
+def numpy_matrix_by_circleindex(np_matrix):
+    return np.array([numpy_array_by_circleindex(an_array) for an_array in np_matrix])
+
 def notegroup_heatmap(notegroup, chromatic=False, title=None):
     np_notegroup = np.array([notegroup])
     return multiple_notegroup_heatmap(np_notegroup, chromatic, title=title)
@@ -44,6 +50,7 @@ def notegroup_heatmap(notegroup, chromatic=False, title=None):
 
 def multiple_notegroup_heatmap(notegroup_list, chromatic=False, yticks=[], title=None):
     np_notegroup_list = np.array([pt_utils.binary_notegroup_to_numpy_array(ng) for ng in notegroup_list])
+    np_notegroup_list_clr = numpy_matrix_by_circleindex(np_notegroup_list)
     
     fig, ax = plt.subplots(figsize=(12, len(np_notegroup_list)))
     ticknames = pt_naming_conventions.circle_fifth_notes() if chromatic == False else pt_naming_conventions.chromatic_notes()
@@ -53,15 +60,17 @@ def multiple_notegroup_heatmap(notegroup_list, chromatic=False, yticks=[], title
     # if it's NOT chromatic (default) everything has to be reconfigured to be analyzed...
     # y_ticknames = []
     
-    
     sb.set(font_scale=1.4)
-    sb.heatmap(np_notegroup_list,
+    sb.heatmap(np_notegroup_list_clr,
                ax=ax,
+               mask=1-np_notegroup_list,
                xticklabels=ticknames, 
                yticklabels=yticks,
                linewidths=1,
+               cmap=sb.hls_palette(12, h=0.08, l=0.6, s=1.0),
                cbar=False, 
-               vmin=0)
+               vmin=0,
+               vmax=1)
     
     ax.set_title(title, fontsize=16)
     plt.show()
@@ -71,10 +80,17 @@ def multiple_notegroup_heatmap(notegroup_list, chromatic=False, yticks=[], title
 
 def horizontal_notegroup_heatmap(notegroup_list, chromatic=False, xticks=[], title=None):
     np_notegroup_list = np.array([pt_utils.binary_notegroup_to_numpy_array(ng) for ng in notegroup_list])
+    np_notegroup_list_clr = numpy_matrix_by_circleindex(np_notegroup_list)
+
     np_notegroup_list = np_notegroup_list.T
+    np_notegroup_list_clr = np_notegroup_list_clr.T
+    
     np_notegroup_list = np.flipud(np_notegroup_list)
-    
-    
+    np_notegroup_list_clr = np.flipud(np_notegroup_list_clr)
+
+
+
+
     fig, ax = plt.subplots(figsize=(17, 3))
     yticks = pt_naming_conventions.circle_fifth_notes() if chromatic == False else pt_naming_conventions.chromatic_notes()
     yticks.reverse()
@@ -84,12 +100,15 @@ def horizontal_notegroup_heatmap(notegroup_list, chromatic=False, xticks=[], tit
     # y_ticknames = []
     
     
-    sb.heatmap(np_notegroup_list,
+    sb.heatmap(np_notegroup_list_clr,
                ax=ax,
+               mask=1-np_notegroup_list,
                xticklabels=xticks, 
                yticklabels=yticks, 
                cbar=False, 
-               vmin=0)
+               cmap=sb.hls_palette(12, h=0.08, l=0.6, s=1.0),
+               vmin=0,
+               vmax=1)
     
     ax.set_title(title, fontsize=16)
     plt.show()
