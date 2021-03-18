@@ -20,6 +20,9 @@ from matplotlib import gridspec as gridspec
 import seaborn as sb
 
 
+hue = 0.27
+sat = 0.9
+light = 0.7
 
 
 def graph_audio_file(filename, key_orientation=np.array([0,0,0,4,3]), chroma_threshold=0.5, filter_chroma=True):
@@ -223,7 +226,7 @@ def graph_waveform_kpdve_combo(y, sr, bin_a, kpdve_a):
                ax=ax_kpdve_ve,
                xticklabels=False,
                yticklabels=False, 
-                      cmap='hsv', 
+                      cmap=sb.husl_palette(12, h=hue, l=light, s=sat),
                       cbar=False, 
                       vmin=0,
                       vmax=12)
@@ -253,7 +256,7 @@ def graph_kpdve(kpdve_a):
                ax=ax_kpdve,
                xticklabels=False,
                yticklabels=False, 
-                      cmap='hsv', 
+                      cmap=sb.husl_palette(12, h=hue, l=light, s=sat),
                       cbar=False, 
                       vmin=0,
                       vmax=12)
@@ -281,12 +284,12 @@ def KPDVE_to_heatmap_display(a_kpdve):
     
     '''
     
-    k = (pt_utils.single_bit_loc(pt_musicutils.circle_conv_lyd_center_for_KPDVE(a_kpdve)) + 11) % 12
-    p = (pt_utils.single_bit_loc(pt_musicutils.circle_conv_tonic_for_KPDVE(a_kpdve)) + 11) % 12
-    d = (pt_utils.single_bit_loc(pt_musicutils.circle_root_note_for_KPDVE(a_kpdve)) + 11) % 12
-    e = (pt_utils.single_bit_loc(pt_musicutils.circle_ext_note_for_KPDVE(a_kpdve)) + 11) % 12
+    k = (pt_utils.single_bit_loc(pt_musicutils.circle_conv_lyd_center_for_KPDVE(a_kpdve))) % 12
+    p = (pt_utils.single_bit_loc(pt_musicutils.circle_conv_tonic_for_KPDVE(a_kpdve))) % 12
+    d = (pt_utils.single_bit_loc(pt_musicutils.circle_root_note_for_KPDVE(a_kpdve))) % 12
+    e = (pt_utils.single_bit_loc(pt_musicutils.circle_ext_note_for_KPDVE(a_kpdve))) % 12
     
-    kpde = np.array([k, p, d,d,d,d,d,d,d,d,d,d,d,d,d,d, e]) # separate the hidden state measurements for visual clarity
+    kpde = np.array([k, k, p, p, p,d,d,d,d,d,d,d,d,d,d,d,d, e]) # separate the hidden state measurements for visual clarity
 
     return kpde
 
