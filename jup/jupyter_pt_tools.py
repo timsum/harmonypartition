@@ -191,7 +191,7 @@ def switch_chroma(chroma):
 
     
 # =============================================================================
-# WAVES
+# NOTEGROUPS TO WAV FILES, IN 
 # =============================================================================
 
 # A SINGLE PILE OF FREQUENCIES FROM A NOTEGROUP
@@ -244,7 +244,8 @@ def ordered_notegroup_wavestep(notenums, Fs=44100, duration=2, chromatic=False, 
             
     return link_freq_sequence(freqs, duration=duration)
 
-# linked sequences
+#========================================
+# LINKED SEQUENCES -- 'ORDERED' IS PITCH CLASS NUMBERS, NOT BINARY 'NOTEGROUPS'
 
 def link_wavepile_sequences(notegroup_list, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal", shepard=False):
     '''
@@ -272,14 +273,6 @@ def link_ordered_wavepile_sequences(notegroup_list, Fs=44100, duration=2, chroma
     '''
     return a wave file with the signals in sequence
 
-    Parameters
-    ----------
-    notegroup_list : TYPE
-        DESCRIPTION.
-    duration : TYPE
-        DESCRIPTION.
-    Fs : TYPE
-        DESCRIPTION.
 
     Returns
     -------
@@ -342,8 +335,8 @@ def link_ordered_wavestep_sequences(notegroup_list, Fs=44100, duration=2, chroma
 
     return signal
 
+#========================================
 # RAW FREQUENCY FUNCTIONS
-
 def freq_for_chrom_pitchnum(pitchnum, from_middle_c=0, temperament="equal"):
     '''
     Returns a frequency value in the octave above middle C for a chromatic number 0-11
@@ -353,15 +346,16 @@ def freq_for_chrom_pitchnum(pitchnum, from_middle_c=0, temperament="equal"):
     
     middle_c_freq = 262
     if (temperament == "just"):
-        return middle_c_freq * just_freqs[(p_num * 7)  % 12] * pow(2, from_middle_c)
-    return middle_c_freq * pow(2, p_num/12) * pow(2, from_middle_c)
+        base_freq = just_freqs[(p_num * 7)  % 12]
+    else:
+        base_freq =  pow(2, p_num/12) 
+    return middle_c_freq * base_freq * pow(2, from_middle_c)
 
 
 def freq_4_note(a_note, from_middle_c=0, temperament="equal"):
     return 2 * np.pi * freq_for_chrom_pitchnum(a_note, from_middle_c=from_middle_c, temperament=temperament)
 
 # FREQUENCY TO SIGNAL-OF-LENGTH FUNCTIONS
-
 def signal_4_freq(freq, Fs=44100, duration=2, in_out_env=True):
     t = np.linspace(0, duration, int(Fs * duration))
     signal = np.sin((2 * np.pi * freq) * t) 
@@ -392,6 +386,7 @@ def pile_freq_sequence(freqs, Fs=44100, duration=2):
         
     return signal
 
+# numpy sequence becomes wave file.
 def norm_wave_write(seq, filename, sr=44100):
     # normalize the sum of the waves...
     seq /= seq.max()*1.5
