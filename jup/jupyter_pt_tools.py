@@ -189,32 +189,15 @@ def switch_chroma(chroma):
     
     return np.roll(chr_switched, 1, axis=0)
 
-
-def freq_for_chrom_pitchnum(pitchnum, from_middle_c=0, temperament="equal"):
-    '''
-    Returns a frequency value in the octave above middle C for a chromatic number 0-11
-    '''
-    middle_c_freq = 262
-    if (temperament == "just"):
-        return middle_c_freq * just_freqs[(pitchnum * 7)  % 12] * pow(2, from_middle_c)
-    return middle_c_freq * pow(2, pitchnum/12) * pow(2, from_middle_c)
-
     
 # =============================================================================
 # WAVES
 # =============================================================================
 
-def signal_4_freq(freq, Fs=44100, duration=2):
-    t = np.linspace(0, duration, int(Fs * duration))
-    signal = np.zeros_like(t)
-
-    return signal + np.sin((2 * np.pi * freq) * t)
-
-def freq_4_note(a_note, from_middle_c=0, temperament="equal"):
-    return 2 * np.pi * freq_for_chrom_pitchnum(a_note, from_middle_c=from_middle_c, temperament=temperament)
-    
+# A SINGLE PILE OF FREQUENCIES FROM A NOTEGROUP
 def notegroup_wavepile(notegroup, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal", shepard=False):
     ng = notegroup
+    
     if (chromatic == False):
         ng = pt_utils.f_circle_to_c_chrom(ng)
         
@@ -222,23 +205,26 @@ def notegroup_wavepile(notegroup, Fs=44100, duration=2, chromatic=False, from_mi
         
     return ordered_notegroup_wavepile(notenums, Fs=Fs, duration=duration, chromatic=chromatic, from_middle_c=from_middle_c, temperament=temperament, shepard=shepard)
 
+# A SINGLE PILE OF FREQUENCIES FROM A SET OF INTEGERS 0-11
 
-def ordered_notegroup_wavepile(notenums, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal", shepard=False):
-    t = np.linspace(0, duration, int(Fs * duration))
-    signal = np.zeros_like(t)
+def ordered_notegroup_wavepile(notenums, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal", shepard=False):    
+    freqs = []
     
     for a_note in notenums:
-        signal = signal + np.sin(freq_4_note(a_note, from_middle_c=from_middle_c, temperament=temperament) * t)
+        p_class = a_note
+        freqs.append(freq_for_chrom_pitchnum(p_class, from_middle_c=from_middle_c, temperament=temperament))
         if (shepard == True):
-            signal = signal + np.sin(freq_4_note(a_note, from_middle_c=from_middle_c-2, temperament=temperament) * t)
-            signal = signal + np.sin(freq_4_note(a_note, from_middle_c=from_middle_c-1, temperament=temperament) * t)
-            signal = signal + np.sin(freq_4_note(a_note, from_middle_c=from_middle_c+1, temperament=temperament) * t)
+            freqs.append(freq_for_chrom_pitchnum(p_class, from_middle_c=from_middle_c-2, temperament=temperament))
+            freqs.append(freq_for_chrom_pitchnum(p_class, from_middle_c=from_middle_c-1, temperament=temperament))
 
-    return signal
+    return pile_freq_sequence(freqs, Fs=Fs, duration=duration)
 
+
+# A SINGLE SEQUENCE OF FREQUENCIES FROM A NOTEGROUP
 
 def notegroup_wavestep(notegroup, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal"):
     ng = notegroup
+    
     if (chromatic == False):
         ng = pt_utils.f_circle_to_c_chrom(ng)
         
@@ -246,38 +232,23 @@ def notegroup_wavestep(notegroup, Fs=44100, duration=2, chromatic=False, from_mi
         
     return ordered_notegroup_wavestep(notenums, Fs=Fs, duration=duration, chromatic=chromatic, from_middle_c=from_middle_c, temperament=temperament)
 
+# A SINGLE SEQUENCE OF FREQUENCIES FROM A SET OF INTEGERS 0-11
 
 def ordered_notegroup_wavestep(notenums, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal", shepard=False):
-    stepdur = duration/len(notenums)
-    steplength = int(Fs * stepdur)
-    
-    t_whole = np.linspace(0, duration, int(Fs * duration))
-    t = np.linspace(0, stepdur, steplength)
-
-    signal = np.zeros_like(t_whole)
-    for i, a_note in enumerate(notenums):
-        signal[i*steplength:(i+1)*steplength] = np.sin(freq_4_note(a_note, from_middle_c=from_middle_c, temperament=temperament) * t)
+    freqs = []
+    for a_note in notenums:
+        freqs.append(freq_for_chrom_pitchnum(a_note, from_middle_c=from_middle_c, temperament=temperament))
         if (shepard == True):
-            signal = signal + np.sin(freq_4_note(a_note, from_middle_c=from_middle_c-2, temperament=temperament) * t)
-            signal = signal + np.sin(freq_4_note(a_note, from_middle_c=from_middle_c-1, temperament=temperament) * t)            
-        
-    return signal
-
+            freqs.append(freq_for_chrom_pitchnum(a_note, from_middle_c=from_middle_c-2, temperament=temperament))
+            freqs.append(freq_for_chrom_pitchnum(a_note, from_middle_c=from_middle_c-1, temperament=temperament))
+            
+    return link_freq_sequence(freqs, duration=duration)
 
 # linked sequences
 
 def link_wavepile_sequences(notegroup_list, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal", shepard=False):
     '''
     return a wave file with the signals in sequence
-
-    Parameters
-    ----------
-    notegroup_list : TYPE
-        DESCRIPTION.
-    duration : TYPE
-        DESCRIPTION.
-    Fs : TYPE
-        DESCRIPTION.
 
     Returns
     -------
@@ -330,16 +301,7 @@ def link_ordered_wavepile_sequences(notegroup_list, Fs=44100, duration=2, chroma
 
 def link_wavestep_sequences(notegroup_list, Fs=44100, duration=2, chromatic=False, from_middle_c=0, temperament="equal"):
     '''
-    return a wave file with the signals in sequence
-
-    Parameters
-    ----------
-    notegroup_list : TYPE
-        DESCRIPTION.
-    duration : TYPE
-        DESCRIPTION.
-    Fs : TYPE
-        DESCRIPTION.
+    return a wave file with the notegroup signals in sequence
 
     Returns
     -------
@@ -363,15 +325,6 @@ def link_ordered_wavestep_sequences(notegroup_list, Fs=44100, duration=2, chroma
     '''
     return a wave file with the signals in sequence
 
-    Parameters
-    ----------
-    notegroup_list : TYPE
-        DESCRIPTION.
-    duration : TYPE
-        DESCRIPTION.
-    Fs : TYPE
-        DESCRIPTION.
-
     Returns
     -------
     a sequence of chords spread evenly over duration
@@ -390,6 +343,36 @@ def link_ordered_wavestep_sequences(notegroup_list, Fs=44100, duration=2, chroma
     return signal
 
 # RAW FREQUENCY FUNCTIONS
+
+def freq_for_chrom_pitchnum(pitchnum, from_middle_c=0, temperament="equal"):
+    '''
+    Returns a frequency value in the octave above middle C for a chromatic number 0-11
+    '''
+    
+    p_num = pitchnum
+    
+    middle_c_freq = 262
+    if (temperament == "just"):
+        return middle_c_freq * just_freqs[(p_num * 7)  % 12] * pow(2, from_middle_c)
+    return middle_c_freq * pow(2, p_num/12) * pow(2, from_middle_c)
+
+
+def freq_4_note(a_note, from_middle_c=0, temperament="equal"):
+    return 2 * np.pi * freq_for_chrom_pitchnum(a_note, from_middle_c=from_middle_c, temperament=temperament)
+
+# FREQUENCY TO SIGNAL-OF-LENGTH FUNCTIONS
+
+def signal_4_freq(freq, Fs=44100, duration=2, in_out_env=True):
+    t = np.linspace(0, duration, int(Fs * duration))
+    signal = np.sin((2 * np.pi * freq) * t) 
+    
+    if in_out_env == True:
+        ramp_len = 40
+        ramp = np.linspace(0, 1, num=ramp_len)
+        signal[0:ramp_len] *= ramp
+        signal[len(signal)-ramp_len:] *= ramp[::-1]
+
+    return signal
 
 def link_freq_sequence(freqs, duration=2):
     stepdur = duration/len(freqs)
