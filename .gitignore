@@ -5,3 +5,10 @@ src/__pycache__/
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 *.wav
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
