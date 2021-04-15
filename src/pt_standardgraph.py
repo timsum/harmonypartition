@@ -5,6 +5,12 @@ import pt_musicutils
 import matplotlib.pyplot as plt
 import seaborn as sb
 
+# ==============================================================================
+# THE CURRENT STANDARD GRAPH
+# This uses K, P, and D as long-term memory underneath a colored 'fifths-chroma' which shows the pitch entropy in a notation OR audio file.
+# input is bin_a, kpdve_a
+# ==============================================================================
+
 def heatmap_col_mask_for_kpdve_bin(a_kpdve, ng):
     k = (pt_utils.single_bit_loc(pt_musicutils.circle_conv_lyd_center_for_KPDVE(a_kpdve))) % 12
     p = (pt_utils.single_bit_loc(pt_musicutils.circle_conv_tonic_for_KPDVE(a_kpdve))) % 12

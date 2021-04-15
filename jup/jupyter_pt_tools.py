@@ -131,32 +131,32 @@ def multiple_notegroup_heatmap(notegroup_list, chromatic=False, yticks=[], title
     return np_notegroup_list
 
 
-def kpdve_notegroup_graph(notegroup_list, title):
-    '''
-    takes a notegroup list (from an analysis and graphs it above key, pattern, and degree)
-    '''
-    np_notegroup_list = np.array([pt_utils.binary_notegroup_to_numpy_array(ng) for ng in notegroup_list])
-    np_notegroup_list_clr = numpy_matrix_by_circleindex(np_notegroup_list)
+# def kpdve_notegroup_graph(notegroup_list, title):
+#     '''
+#     takes a notegroup list (from an analysis and graphs it above key, pattern, and degree)
+#     '''
+#     np_notegroup_list = np.array([pt_utils.binary_notegroup_to_numpy_array(ng) for ng in notegroup_list])
+#     np_notegroup_list_clr = numpy_matrix_by_circleindex(np_notegroup_list)
 
-    # flip it horizontal
-    np_notegroup_list = np_notegroup_list.T
-    np_notegroup_list_clr = np_notegroup_list_clr.T
+#     # flip it horizontal
+#     np_notegroup_list = np_notegroup_list.T
+#     np_notegroup_list_clr = np_notegroup_list_clr.T
     
-    np_notegroup_list = np.flipud(np_notegroup_list)
-    np_notegroup_list_clr = np.flipud(np_notegroup_list_clr)
+#     np_notegroup_list = np.flipud(np_notegroup_list)
+#     np_notegroup_list_clr = np.flipud(np_notegroup_list_clr)
     
-    sb.heatmap(np_notegroup_list_clr,
-               ax=ax,
-               mask=1-np_notegroup_list,
-               xticklabels=xticks, 
-               yticklabels=yticks, 
-               cbar=False, 
-               cmap=sb.husl_palette(12, h=hue, l=light, s=sat),
-               vmin=0,
-               vmax=1)
+#     sb.heatmap(np_notegroup_list_clr,
+#                ax=ax,
+#                mask=1-np_notegroup_list,
+#                xticklabels=xticks, 
+#                yticklabels=yticks, 
+#                cbar=False, 
+#                cmap=sb.husl_palette(12, h=hue, l=light, s=sat),
+#                vmin=0,
+#                vmax=1)
     
-    ax.set_title(title, fontsize=16)
-    plt.show()   
+#     ax.set_title(title, fontsize=16)
+#     plt.show()   
 
 def horizontal_notegroup_heatmap(notegroup_list, chromatic=False, xticks=[], title=None):
     np_notegroup_list = np.array([pt_utils.binary_notegroup_to_numpy_array(ng) for ng in notegroup_list])
@@ -194,17 +194,17 @@ def horizontal_notegroup_heatmap(notegroup_list, chromatic=False, xticks=[], tit
     
     return np_notegroup_list
 
-def heatmap_for_midi_file(filename, key_orientation=np.array([0,0,0,4,3])):
-    bin_a, kpdve_a = pt_analyzeaudio.analyze_notation_file(filename, key_orientation)
-    bin_seq = [pt_keypattern.get_binary_KPDVE_chord(a_kpdve) for a_kpdve in kpdve_a]
-    # funcs = [pt_naming_conventions.chord_function_in_key(a_kpdve) for a_kpdve in kpdve_a]
-    return horizontal_notegroup_heatmap(bin_seq)
+# def heatmap_for_midi_file(filename, key_orientation=np.array([0,0,0,4,3])):
+#     bin_a, kpdve_a = pt_analyzeaudio.analyze_notation_file(filename, key_orientation)
+#     bin_seq = [pt_keypattern.get_binary_KPDVE_chord(a_kpdve) for a_kpdve in kpdve_a]
+#     # funcs = [pt_naming_conventions.chord_function_in_key(a_kpdve) for a_kpdve in kpdve_a]
+#     return horizontal_notegroup_heatmap(bin_seq)
     
-    # return bin_a
+#     # return bin_a
 
-def d_val_heatmap():
-    # should go dark for higher d vals 
-    pass
+# def d_val_heatmap():
+#     # should go dark for higher d vals 
+#     pass
     
 
 # =============================================================================
