@@ -18,6 +18,7 @@ import IPython.display as ipd
 import pt_utils
 import pt_naming_conventions
 import pt_keypattern
+import pt_musicutils
 import harmony_state
 
 # from previous pypartita dev
@@ -130,10 +131,38 @@ def multiple_notegroup_heatmap(notegroup_list, chromatic=False, yticks=[], title
     return np_notegroup_list
 
 
+def kpdve_notegroup_graph(notegroup_list, title):
+    '''
+    takes a notegroup list (from an analysis and graphs it above key, pattern, and degree)
+    '''
+    np_notegroup_list = np.array([pt_utils.binary_notegroup_to_numpy_array(ng) for ng in notegroup_list])
+    np_notegroup_list_clr = numpy_matrix_by_circleindex(np_notegroup_list)
+
+    # flip it horizontal
+    np_notegroup_list = np_notegroup_list.T
+    np_notegroup_list_clr = np_notegroup_list_clr.T
+    
+    np_notegroup_list = np.flipud(np_notegroup_list)
+    np_notegroup_list_clr = np.flipud(np_notegroup_list_clr)
+    
+    sb.heatmap(np_notegroup_list_clr,
+               ax=ax,
+               mask=1-np_notegroup_list,
+               xticklabels=xticks, 
+               yticklabels=yticks, 
+               cbar=False, 
+               cmap=sb.husl_palette(12, h=hue, l=light, s=sat),
+               vmin=0,
+               vmax=1)
+    
+    ax.set_title(title, fontsize=16)
+    plt.show()   
+
 def horizontal_notegroup_heatmap(notegroup_list, chromatic=False, xticks=[], title=None):
     np_notegroup_list = np.array([pt_utils.binary_notegroup_to_numpy_array(ng) for ng in notegroup_list])
     np_notegroup_list_clr = numpy_matrix_by_circleindex(np_notegroup_list)
 
+    # flip it horizontal
     np_notegroup_list = np_notegroup_list.T
     np_notegroup_list_clr = np_notegroup_list_clr.T
     
@@ -177,6 +206,76 @@ def d_val_heatmap():
     # should go dark for higher d vals 
     pass
     
+
+# =============================================================================
+# NEGATIVIZE
+# =============================================================================
+
+def negativize(a_kpdve):
+    k = (a_kpdve[0] + 9) % 12
+    p = 3 if a_kpdve[2] == 2 else 0
+    d = 7 - a_kpdve[2]
+    v = 7 - a_kpdve[3]
+    e = a_kpdve[4]
+    return np.array([k,p,d,v,e])
+
+# =============================================================================
+# NEW STANDARD HEATMAP
+# =============================================================================
+
+    
+def heatmap_col_mask_for_kpdve_bin(a_kpdve, ng):
+    k = (pt_utils.single_bit_loc(pt_musicutils.circle_conv_lyd_center_for_KPDVE(a_kpdve))) % 12
+    p = (pt_utils.single_bit_loc(pt_musicutils.circle_conv_tonic_for_KPDVE(a_kpdve))) % 12
+    d = (pt_utils.single_bit_loc(pt_musicutils.circle_root_note_for_KPDVE(a_kpdve))) % 12
+    e = (pt_utils.single_bit_loc(pt_musicutils.circle_ext_note_for_KPDVE(a_kpdve))) % 12
+
+    kpd_part = [k, p, d]
+    msk_lin = [1]
+    
+    ng_circ = pt_utils.c_chrom_to_f_circle(ng) 
+    bin_notes = pt_utils.binary_notegroup_to_numpy_array(ng_circ)
+    
+    notes = list(bin_notes * np.array([i for i in range(12)]))
+    mask = np.array([0,0,0] + (msk_lin * 2) + list(1-bin_notes))
+
+    full_column = np.array(kpd_part + (msk_lin * 2) + notes)
+    return full_column, mask
+
+def data_and_mask_for_kpdve_a_bin_a_heatmap(kpdve_a, bin_a):
+    heatmap = []
+    mask = []
+    for k, b in zip(kpdve_a, bin_a):
+        col, msk = heatmap_col_mask_for_kpdve_bin(k, b)
+        heatmap.append(np.flipud(col))
+        mask.append(np.flipud(msk))
+
+    return np.array(heatmap).T, np.array(mask).T
+
+def bin_a_kpdve_a_heatmap(bin_a, kpdve_a, title=None):
+    data, mask = data_and_mask_for_kpdve_a_bin_a_heatmap(kpdve_a, bin_a)
+
+    hue = 0.27
+    sat = 1.0
+    light = 0.8
+    fig, ax = plt.subplots(figsize=(17, 3))
+
+    spacer_tick = ["=="]
+    yticks = ["k", "p", "d"] + spacer_tick * 2 + pt_naming_conventions.circle_fifth_notes()
+    yticks = yticks[::-1]
+    sb.heatmap(data,
+               ax=ax,
+               mask=mask,
+               cbar=False, 
+               cmap=sb.husl_palette(12, h=hue, l=light, s=sat),
+               xticklabels=[], 
+               yticklabels=yticks,
+               vmin=0,
+               vmax=11)
+    
+    ax.set_facecolor("black")
+    ax.set_title(title, fontsize=16)
+    plt.show()
 # =============================================================================
 # CHROMA TOOLS
 # =============================================================================
@@ -356,9 +455,9 @@ def freq_4_note(a_note, from_middle_c=0, temperament="equal"):
     return 2 * np.pi * freq_for_chrom_pitchnum(a_note, from_middle_c=from_middle_c, temperament=temperament)
 
 # FREQUENCY TO SIGNAL-OF-LENGTH FUNCTIONS
-def signal_4_freq(freq, Fs=44100, duration=2, in_out_env=True):
+def signal_4_freq(freq, Fs=44100, duration=2, in_out_env=True, amp=1.0, phi=0.0):
     t = np.linspace(0, duration, int(Fs * duration))
-    signal = np.sin((2 * np.pi * freq) * t) 
+    signal = amp * np.sin((2 * np.pi * freq) * t + phi) 
     
     if in_out_env == True:
         ramp_len = 40

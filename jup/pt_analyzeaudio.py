@@ -268,6 +268,8 @@ def kpdve_list_to_heatmap_graphable(kpdve_list):
 
 
 # HEATMAP SIMPLE -- NOT SIMPLE, THIS FUNCTION IS FUCKED, TALK IT THROUGH...
+
+# THIS IS ESSENTIALLY DEPRECATED... IT IS THE 'OLD-SCHOOL KPDVE WITHOUT THE NOTEGROUP INFO'
 def KPDVE_to_heatmap_display(a_kpdve):
     '''
     returns a vector of length 4 with [K,P, D, E ordered chord notes... up to 7] 
@@ -292,6 +294,13 @@ def KPDVE_to_heatmap_display(a_kpdve):
     kpde = np.array([k, k, p, p, p,d,d,d,d,d,d,d,d,d,d,d,d, e]) # separate the hidden state measurements for visual clarity
 
     return kpde
+
+def KPDVE_to_KPD_graphable(a_kpdve):
+    k = (pt_utils.single_bit_loc(pt_musicutils.circle_conv_lyd_center_for_KPDVE(a_kpdve))) % 12
+    p = (pt_utils.single_bit_loc(pt_musicutils.circle_conv_tonic_for_KPDVE(a_kpdve))) % 12
+    d = (pt_utils.single_bit_loc(pt_musicutils.circle_root_note_for_KPDVE(a_kpdve))) % 12
+    
+    return np.array([k, p, d])
 
 if __name__ == "__main__":
     import doctest

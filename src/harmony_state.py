@@ -14,6 +14,10 @@ import pt_musicutils
 import pt_naming_conventions
 import pt_keypattern
 
+#   IMPORTANT: IT MAY BE BEST IN THE END TO DIG ONE LEVEL DEEPER, AND HAVE THE WHOLE THING DEFINED BY THE BITWISE ENCODING
+#   THIS WILL ALLOW ONE OF THE EXTRA BITS (CURRENTLY IT USES 28) TO ENCODE THE PENTATONIC/HEPTATONIC BASE.
+#   PENTATONIC REMAINS INSUFFICIENTLY EXPLORED
+
 class harmony_state():
     '''
     The core class for improvised performing in the kpdve|binary scheme
@@ -94,12 +98,16 @@ class harmony_state():
 
 
     def change_from_midi(self, midi_list, v_opt=0):
+        '''
+        a simple wrapper of 'change_notegroup' which accepts a list of 0-127 numberd MIDI notes and reduces them to a single byte.
+        '''
         notegroup = 0
         for midi_note in midi_list:
             notegroup |= pt_utils.LEFT_BIT >> (midi_note % 12)
 
         return self.change_notegroup(notegroup, v_opt=v_opt)
         
+
 
 
     # ACCESS EXTRAPOLATIONS.
@@ -257,8 +265,10 @@ class harmony_state():
         
         
     
-    # --------------------------------------------------------------
-    # STANDARD MANIPULATIONS FOR NAVIGATING THE STATE AS A PLAYER...        
+    # ------------------------------------------------------------------
+    # STANDARD MANIPULATIONS FOR NAVIGATING THE STATE THROUGH PARAMETERS
+    # ------------------------------------------------------------------
+    
     def param_increment(self, param_num, increment=-1):
         '''
         returns a unit kpdve to add or subtract to a given parameter.  Creates navigation possibilities through mapping

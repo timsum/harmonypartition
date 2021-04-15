@@ -113,5 +113,7 @@ def analyze_midi_piano_input():
         print(current_state.current_root_string() + " as " + current_state.current_function_string() + " of " + current_state.current_conv_tonic_string() + " " + current_state.current_conv_pattern_string())
         
         time.sleep(0.001)
+
         
-analyze_midi_piano_input()
+if __name__ == "__main__":
+    analyze_midi_piano_input()
