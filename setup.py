@@ -34,5 +34,5 @@ setup(
                      "Topic :: Multimedia :: Sound/Audio :: Analysis",
                      "Topic :: Multimedia :: Sound/Audio :: MIDI",
                      "Topic :: Scientific/Engineering :: Visualization"],
-      py_modules=["harmony_state", "partita", "pt_datafiles", "pt_keypattern", "pt_kpdve_list_optimize", "pt_musicutils", "pt_naming_conventions", "pt_utils", "pt_standardgraph", "pt_wavewrite", "pt_harmonyfilters"],
+      py_modules=["harmony_state", "partita", "pt_datafiles", "pt_keypattern", "pt_kpdve_list_optimize", "pt_musicutils", "pt_naming_conventions", "pt_utils", "pt_standardgraph", "pt_wavewrite", "pt_harmonyfilters", "pt_analyzeaudio", "pt_analyzeMIDI", "pt_MIDI_live"],
 )
