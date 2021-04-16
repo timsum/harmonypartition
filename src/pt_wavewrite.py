@@ -216,4 +216,4 @@ def pile_freq_sequence(freqs, Fs=44100, duration=2):
 def norm_wave_write(seq, filename, sr=44100):
     # normalize the sum of the waves...
     seq /= seq.max()*1.5
-    write(filename, sr, seq)
+    write("../audio/" + filename, sr, seq)
