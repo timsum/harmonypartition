@@ -97,22 +97,6 @@ def chroma_to_binary_value(chroma_stripe, threshold=0.5):
     notegroup = 0
     count = 0
     
-    # experimental from here... try with graph?
-#     softmaxed = chroma_stripe/np.sum(chroma_stripe)
-#     argsorted_desc = np.argsort(softmaxed)[::-1]
-    
-    
-#     total = 0.0
-#     note_count = 0
-#     for an_index in argsorted_desc:
-#         total += softmaxed[an_index]
-#         note_count += 1
-#         if total > threshold:
-#             break
-  
-#     return pt_utils.binary_note_for_chord(argsorted_desc[:note_count])
-    
-    
     for a_val in chroma_stripe:
         if a_val > threshold :
             notegroup |= pt_utils.LEFT_BIT >> count
@@ -143,7 +127,7 @@ def analyze_chroma_list(chroma, threshold=0.5, key_orientation=np.array([0,0,0,4
 
     # make a binary version for particular naming -- binary chroma is a single 12-bit integer
     binary_chroma = chroma_list_to_binary_list(chroma, threshold)
-    kpdve_chroma = np.zeros((binary_chroma.shape[0], 5), dtype=int)
+    kpdve_chroma = np.zeros((binary_chroma.shape[0], 5), dtype=Int)
 
     for i, ng in np.ndenumerate(binary_chroma):
         h.change_notegroup(ng)

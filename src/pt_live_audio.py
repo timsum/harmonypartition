@@ -16,7 +16,7 @@ import pt_analyzeaudio
 import pt_naming_conventions
 import harmony_state
 
-def analyze_audio_in(buffer_size=2048, sr=11025):
+def analyze_audio_in(buffer_size=512, sr=44100):
     #init pyaudio
     p = pyaudio.PyAudio()
 
@@ -25,7 +25,7 @@ def analyze_audio_in(buffer_size=2048, sr=11025):
     pyaudio_format = pyaudio.paFloat32
     stream = p.open(format=pyaudio_format,
                     channels=1,
-                    rate=11025,
+                    rate=sr,
                     input=True,
                     output=True,
                     frames_per_buffer=buffer_size)
@@ -38,13 +38,14 @@ def analyze_audio_in(buffer_size=2048, sr=11025):
             samples = np.frombuffer(data, dtype=float)
     
             # IS THIS NORMALIZED? IS THAT A PROBLEM (IF SO, I THINK IT IS... investigate)
-            C = librosa.feature.chroma_stft(y=samples, sr=11025, hop_length=2048)
+            C = librosa.feature.chroma_stft(y=samples, sr=sr, hop_length=512)
             # C_f = np.minimum(C, librosa.decompose.nn_filter(C,
             #                                                 aggregate=np.median,
             #                                                 metric='cosine'))
             
             num = pt_analyzeaudio.chroma_to_binary_value(C)
             current_state.change_notegroup(num)
+            print(current_state.current_root_string() + " as " + current_state.current_function_string())
             
 
 # =============================================================================
