@@ -85,3 +85,44 @@ The net result is to *combine one type of input with a derived version of the ot
                     This is currently calculated as pythagorean distance in modular space
     * 3) a group of notes represented in 12-bit form (0b101010110101)built from a 
         KPDVE value (where the context is known, but not the notes of the chord)
+
+---
+# The harmony_state Class
+
+The central mechanism for handling input and output is the harmony_state. 
+
+The harmony state can be changed with groups of notes given as:
+
+1) a 12-bit integer in chromatic-tone order, e.g. 0b100010010001 for a C Major 7 chord
+2) a list of midi notes, e.g. [60, 64, 67, 71] for a C Major 7 chord
+   
+The harmony state can change its context with a five-parameter system:
+1) a numpy array of length 5, eg. np.array([0,0,1,4,3]) for a C Major 7 chord
+2) direct access to current_tonic, current_dominant, etc. 
+
+Every harmony_state can be mined for at least the following information (available through string_description() function):
+
+```
+compressed uniqueID: 0x00238c4 
+       kpdve values: [0 0 0 4 3] 
+chromatic notegroup: 0b100011000100
+==-- derived meanings: --==
+ (conventional) mode: C Major (tonic) 
+(conventional) chord: F functioning as IV  
+ (non-entropic) base: F Lydian 
+
+== chromatic (12-note pitch-class) locations: 
+chord notes: [0 4 5 9] : F A C E 
+scale notes: [ 0  2  4  5  7  9 11] : F G A B C D E 
+
+== modes and chords over roots (modal scales) 
+   chord measured from root: [ 0  4  7 11] 
+ root: 5 (F A C E)
+    mode measured from chord root: [ 0  2  4  6  7  9 11] 
+ root : 5 (F G A B C D E)
+displacement/mode *** for DAW settings: ***
+    tonic scale: [ 0  2  4  5  7  9 11] 
+ starting from: 0
+
+== locations in 7-note system: [3 5 0 2]
+```
