@@ -124,7 +124,7 @@ def chroma_to_binary_value(chroma_stripe, threshold=0.5):
 # 1AA
 def analyze_chroma_list(chroma, threshold=0.5, key_orientation=np.array([0,0,0,4,2])):
     '''
-    given the chroma list of a mp3 file, perform a matching KPDVE analysis
+    given the chroma list of an audio file, perform a matching KPDVE analysis
 
     Parameters
     ----------

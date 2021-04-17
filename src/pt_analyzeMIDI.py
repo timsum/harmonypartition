@@ -73,7 +73,3 @@ def analyze_notation_file(filename, key_orientation=np.array([0,0,0,4,2]), beats
     bin_a, kpdve_a = analyze_parsed_notation_file(parsedfile, key_orientation, beats_per_slice)
 
     return bin_a, kpdve_a
-
-
-
-    
