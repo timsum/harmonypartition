@@ -2,9 +2,7 @@
  *harmonypartition* is a system for the analysis and generation of musical harmony
  Developed by [Timothy Summers](http://www.timsummers.org)
 
-It works in two ways: 1) analyzing binary encodings of note-combinations to derive their probable function in context and 2) analyzing the parametrized context to derive binary encodings of note-combinations.
-
-In this system musical modes function as latent spaces into which single notes can be given clearly definable roles and weights. 
+In this system, musical modes function as latent spaces into which single notes can be given clearly definable roles and weights. 
 
 This 'dynamic tokenization' is made possible by treating musical harmony as a more or less 'natural' consequence of mixing binary and ternary computing.
 
