@@ -32,7 +32,9 @@ The correspondence to many conventions of Western harmonic practise is strong, b
 
 ## Partita handles two fundamental types of input.
 1) **integer:** groups of notes as a binary pitch-class set (0b100010010001)
-2) **integer array:** a harmonic context (KPDVE): np.array([1,0,0,4,3])
+2) **integer array:** a harmonic context (KPDVE): np.array([0, 0, 0, 4, 3])
+   
+*(NB: for transfer, these can be combined into a single 28-bit integer, e.g.: 0x00238c4)*
 
 * **binary pitch class set input (int)**
     * note input can take the following forms:
