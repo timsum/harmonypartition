@@ -60,34 +60,30 @@ The correspondence to many conventions of Western harmonic practise is strong, b
         * a python list (or numpy array) of 5 integers
 
 ---
-## OUTPUT
+## OUTPUT -- 1) calculated and 2) state-based
 
-### partita outputs an encoding of harmonic context paired with a set of notes:
-** a five-integer array (KPDVE) <==> (binary) a pitch-class set of a chord within a context **
+### 1) partita.py calculates a harmonic context paired with a set of notes:
+*context: np.array([K,P,D,V,E]) <==> audible notes: (integer)*
 
 In this system, harmony and melody become reciprocal types of information
 
-The net result is to *combine one type of input with a derived version of the other*
+The net result of the analysis is to *combine each type of input with a derived version of the other*
 
 * Within those bounds, there are three forms for this output:
     * 1) a list of integers encoded in the form below, which binds the two types of input in a single encoding.
-        * RxxxKKKKPPPDDDVVVEEEC-D-EF-G-A-B
-        * this form of output is most complete and compact for transfer, 
-            explicitly pairing two different types of information (notes and 
-            harmonic context). 
-        * it ties together both context and chord in a 32-bit format (4 bits at left for special markings: TBD):
-    * 2) an (n x 5) numpy array of KPDVE (chord context) values for a group of notes 
-        (where the chord notes are known, but not the harmonic context)
-        this provides all possible locations for a given chord, without choosing one as 'best'
-            * a partita list has a max length 84 for a single note, but averages about 10-12 for multi-note input
-                * The matter of which of these numbers constitutes the optimal solution is trivial in the case of KPDVE input -- always the same
-                * List output from note intput requires analysis: the simplest system would simply measure the proximity to the previous result. 
-                    This is currently calculated as pythagorean distance in modular space
+        * 0b----KKKKPPPDDDVVVEEEC-D-EF-G-A-B
+        * complete and compact for transfer
+        * binds context and chord in a 32-bit format (4 bits at left for special markings: TBD)
+    * 2) an (n, 5) numpy array of KPDVE (context) values which serve as possible context for a group of notes 
+        * a partita list has a max length 84 for a single note, but averages about 10-12 for multi-note input
+        * The matter of which of these numbers constitutes the optimal solution is trivial in the case of KPDVE input -- always the same
+        * List output from note intput requires analysis: the simplest system would simply measure the proximity to the previous result. 
+        * Best fit is currently calculated as pythagorean distance in a modular space (harmony voxel) (pt_kpdve_list_optimize.py)
     * 3) a group of notes represented in 12-bit form (0b101010110101)built from a 
         KPDVE value (where the context is known, but not the notes of the chord)
 
 ---
-# The harmony_state Class
+### The harmony_state Class
 
 The central mechanism for handling input and output is the harmony_state. 
 
