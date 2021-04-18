@@ -135,6 +135,9 @@ class harmony_state():
     def current_conv_tonic(self):
         return pt_utils.bit_locs(pt_musicutils.chrom_conv_tonic_for_KPDVE(self.current_kpdve))[0]
 
+    def current_minimal_rep(self):
+        return pt_utils.minimal_bin_kpdve(self.current_binary, self.current_kpdve)
+
     
     # RAW CHORDS/MODES WITH A DISPLACEMENT, TO INTERACT WITH SCALE/KEY-BASED ENVIRONMENTS (e.g. FoxDot)
     # assumes chromatic basis
@@ -158,8 +161,11 @@ class harmony_state():
     
     # string descriptions individual
     def current_hex_string(self):
-        return "0x" + hex(pt_utils.minimal_bin_kpdve(self.current_binary, self.current_kpdve))[2:].zfill(7)
-    
+        return "0x" + hex(self.current_minimal_rep())[2:].zfill(7)
+
+    def current_notegroup_string(self):
+        return "Ob" + bin(self.current_binary)[2:].zfill(12)
+
     def current_conv_tonic_string(self):
         return pt_naming_conventions.conv_tonic_name_for_kpdve(self.current_kpdve)
     
@@ -205,9 +211,9 @@ class harmony_state():
 
         # the basic hex string
         hex_string = "compressed uniqueID: "
-        hex_string += "0x" + hex(pt_utils.minimal_bin_kpdve(notegroup, kpdve))[2:].zfill(7) + " \n"
+        hex_string += self.current_hex_string() + " \n"
         kpdve_string = np.array_str(self.current_kpdve) + " \n"
-        bin_string = bin(self.current_binary).zfill(12)
+        bin_string = self.current_notegroup_string()
         # div
         div_string = "\n==-- derived meanings: --==\n"
         # mode
