@@ -43,7 +43,7 @@ def analyze_binary_input_for_closest_KPDVE(notegroup, kpdve, v_opt=0):
     else:
         return new_kpdve
 
-def analyze_midi_note_input_for_closest_KPDVE(midinote_list, kpdve):
+def analyze_midi_note_input_for_closest_KPDVE(midinote_list, kpdve, v_opt=0):
     '''
 
     Parameters
@@ -67,7 +67,7 @@ def analyze_midi_note_input_for_closest_KPDVE(midinote_list, kpdve):
     for midi_note in midinote_list:
         notegroup |= pt_utils.LEFT_BIT >> (midi_note % 12)
             
-    return analyze_binary_input_for_closest_KPDVE(notegroup, kpdve)
+    return analyze_binary_input_for_closest_KPDVE(notegroup, kpdve, v_opt=v_opt)
 
 # =============================================================================
 # unoptimized KPDVE list
