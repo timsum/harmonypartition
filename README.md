@@ -74,7 +74,7 @@ The net result of the analysis is to *combine each type of input with a derived 
         * 0b----KKKKPPPDDDVVVEEEC-D-EF-G-A-B
         * 4 bits at left for special markings: TBD
     * 2) an (n, 5) numpy array of KPDVE (context) values which serve as possible context for a group of notes 
-        * a kpdve_list has a max length 84 for a single note, but averages about 10-12 for multi-note input
+        * a kpdve_list has a max length n = 84 for a single note, but is usually length 10 or so three- or four-note input
         * kpdve_list output from note intput requires analysis: the simplest system measures the proximity to the previous result. 
         * best fit is currently calculated as pythagorean distance in a modular space (harmony voxel) (pt_kpdve_list_optimize.py)
     * 3) a group of notes represented in 12-bit form (0b101010110101)built from a KPDVE value (where the context is known, but not the notes of the chord)
@@ -87,11 +87,13 @@ The net result of the analysis is to *combine each type of input with a derived 
 The harmony state can be changed with groups of notes given as:
 
 1) a 12-bit integer in chromatic-tone order, e.g. 0b100010010001 for a C Major 7 chord
+   + these can be derived from Librosa *chroma*, and might possibly be extended to include *any* result of a Fourier transform... 
 2) a list of midi notes, e.g. [60, 64, 67, 71] for a C Major 7 chord
    
-The harmony state can change its context with a five-parameter system:
+The harmony state can change its output and context through a five-parameter system:
 1) a numpy array of length 5, eg. np.array([0,0,1,4,3]) for a C Major 7 chord
-2) direct access to current_tonic, current_dominant, etc. 
+2) direct access to current_tonic(), current_dominant(), etc. 
+3) filters may be applied (e.g. 'negativize()) to change the harmonic space according to familiar patterns.
 
 Every harmony_state can be mined for at least the following information (available through string_description() function):
 
