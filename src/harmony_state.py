@@ -38,6 +38,9 @@ class harmony_state():
         self.prev_kpdve = self.current_kpdve
         self.prev_binary = self.current_binary
 
+        #FLAG INVALID STATE
+        self.valid_state = True
+
         self.rand_walk_steps = np.array([-1, 0, 1])
 
 
