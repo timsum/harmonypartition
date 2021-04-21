@@ -127,7 +127,7 @@ def analyze_chroma_list(chroma, threshold=0.5, key_orientation=np.array([0,0,0,4
 
     # make a binary version for particular naming -- binary chroma is a single 12-bit integer
     binary_chroma = chroma_list_to_binary_list(chroma, threshold)
-    kpdve_chroma = np.zeros((binary_chroma.shape[0], 5), dtype=Int)
+    kpdve_chroma = np.zeros((binary_chroma.shape[0], 5), dtype=int)
 
     for i, ng in np.ndenumerate(binary_chroma):
         h.change_notegroup(ng)
