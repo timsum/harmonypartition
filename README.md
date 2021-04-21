@@ -18,7 +18,7 @@ The underlying system allows entwines  ideas of melody and harmony:
 
 
 
-*harmonypartition* sets up a network of bits, in which a combination of binary filters and a
+*harmonypartition* sets up a network of bits in which a combination of binary filters and a
 trivial backpropagation provide a wealth of actionable musical information.
 
 The system is modeled on the practise modal improvisation, and is intended to promote the practise of tonal improvisation both on digital and analog devices. 
@@ -80,9 +80,9 @@ The net result of the analysis is to *combine each type of input with a derived 
     * 3) a group of notes represented in 12-bit form (0b101010110101)built from a KPDVE value (where the context is known, but not the notes of the chord)
 
 ---
-### The harmony_state Class
+## STATE: The harmony_state Class
 
-## The central mechanism for handling input and output is the harmony_state. 
+### The central mechanism for handling input and output is the harmony_state. 
 
 The harmony state can be changed with groups of notes given as:
 
@@ -121,3 +121,28 @@ displacement/mode *** for DAW settings: ***
 
 == locations in 7-note system: [3 5 0 2]
 ```
+
+# USE
+
+---
+## Analyzing Audio Files
+- Librosa
+- Magenta Onsets and Frames (?)
+(instructions coming soon)
+
+---
+## Analyzing MIDI Files
+- Music21
+(instructions coming soon)
+
+---
+## Analyzing Live MIDI
+- Mido
+(instructions coming soon)
+
+---
+## Analyzing Live Audio
+- Pyaudio
+(instructions coming soon)
+
+
