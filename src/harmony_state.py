@@ -13,6 +13,7 @@ import pt_utils
 import pt_musicutils
 import pt_naming_conventions
 import pt_keypattern
+import pt_analyzeaudio
 
 #   IMPORTANT: IT MAY BE BEST IN THE END TO DIG ONE LEVEL DEEPER, AND HAVE THE WHOLE THING DEFINED BY THE BITWISE ENCODING
 #   THIS WILL ALLOW ONE OF THE EXTRA BITS (CURRENTLY IT USES 28) TO ENCODE THE PENTATONIC/HEPTATONIC BASE.
@@ -40,6 +41,9 @@ class harmony_state():
 
         #FLAG INVALID STATE
         self.valid_state = True
+
+        #CHROMA STATUS
+        self.chroma_values = np.zeros((12,))
 
         self.rand_walk_steps = np.array([-1, 0, 1])
 
@@ -103,6 +107,8 @@ class harmony_state():
     def change_from_midi(self, midi_list, v_opt=0):
         '''
         a simple wrapper of 'change_notegroup' which accepts a list of 0-127 numberd MIDI notes and reduces them to a single byte.
+
+        pt_live_MIDI.py handles buffering and collection.
         '''
         notegroup = 0
         for midi_note in midi_list:
@@ -111,6 +117,40 @@ class harmony_state():
         return self.change_notegroup(notegroup, v_opt=v_opt)
         
 
+    def change_from_chroma(self, chroma_array, threshold=0.5, max_notes=None, v_opt=0):
+        '''
+        takes a 
+
+        Parameters
+        ----------
+        chroma_array : np.array(1, 12)
+            a chromatic pitch-class set, represented as floats 0-1
+        threshold : float
+            a lower threshold for strength of input
+        max_notes : int
+            limits chroma to the top N notes. (can be further culled by threshold)
+
+        Returns
+        -------
+        True if changed, False if no change is NECESSARY
+        '''
+        # it is very possible that the previous KPDVE state has to alter a nearest-neighbor algorithm so that half-steps
+        # around string notes don't 
+        # create too much chaos  -- it makes sense that a key should build in a bias for its notes.
+
+        if max_notes != None:
+            # pick top N values
+            top_n = chroma_array.argsort()[::-1][:max_notes]
+            sparse_chroma = np.zeros((12,))
+            for an_idx in top_n:
+                sparse_chroma[an_idx] = chroma_array[an_idx]
+            notegroup = pt_analyzeaudio.chroma_to_binary_value(sparse_chroma, threshold=threshold)
+        else:
+            notegroup = pt_analyzeaudio.chroma_to_binary_value(chroma_array, threshold=threshold)
+
+        self.chroma_values = np.copy(chroma_array)
+
+        return self.change_notegroup(notegroup, v_opt=v_opt)
 
 
     # ACCESS EXTRAPOLATIONS.
