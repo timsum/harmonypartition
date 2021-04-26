@@ -19,13 +19,13 @@ import pt_keypattern
 import pt_utils
 import harmony_state
 
-from tkinter import *
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, 
-NavigationToolbar2Tk)
+import pt_live_graph
 
+# FFT - Chroma params:
+N_FFT = 1024
+HOP_LENGTH = 512
 
-def analyze_audio_in(buffer_size=2048, sr=44100):
+def analyze_audio_in(buffer_size=1024, sr=22050):
     #init pyaudio
     p = pyaudio.PyAudio()
 
@@ -38,55 +38,33 @@ def analyze_audio_in(buffer_size=2048, sr=44100):
                     input=True,
                     output=True,
                     frames_per_buffer=buffer_size)
-    
-
-    # FFT - Chroma params:
-    N_FFT = 4096
-    HOP_LENGTH = 2048
 
     # Harmony State
     current_state = harmony_state.harmony_state()
-
-    # fig = plt.figure(figsize=(12, 1))
-    # ax = fig.add_subplot(111)
-    # im = ax.imshow(np.random.rand())
-    # plt.show(block=False)
+    graph_window = pt_live_graph.live_harmony_graph(current_state)
 
     count = 0
-    maxcount = 100
+    maxcount = 3
 
     while True:
         try:
             data = stream.read(buffer_size, exception_on_overflow=False)
             samples = np.frombuffer(data, dtype=float)
     
-            # C = np.minimum(C,librosa.decompose.nn_filter(C,
-            #                                               aggregate=np.mean,
-            #                                               metric='cosine'))
-
             S = np.abs(librosa.stft(samples, n_fft=N_FFT))**2
             C = librosa.feature.chroma_stft(S=S, sr=sr, hop_length=HOP_LENGTH)
-        
+
+            C = np.minimum(C, librosa.decompose.nn_filter(C, aggregate=np.mean, metric='cosine'))
             C_mean = np.mean(C, axis=1)
 
-            bin_num = pt_analyzeaudio.chroma_to_binary_value(C_mean, threshold=0.5)
-            if current_state.change_notegroup(bin_num):
-                ng_fifths = pt_utils.c_chrom_to_f_circle(current_state.current_binary)
-                ng_kp = pt_keypattern.get_binary_KP(current_state.current_kpdve[0], current_state.current_kpdve[1])
-
-                print("Ob" + bin(ng_fifths)[2:].zfill(12) + "    " +   current_state.current_root_string() + " as " + current_state.current_function_string() + "|| Ob" + bin(ng_kp)[2:].zfill(12) + " of " + current_state.current_conv_tonic_string() + " " + current_state.current_conv_pattern_string())
-
-
-            if (count == maxcount):  
-                #im.set_array(np.random.random(12, 1))
-                # redraw the figure
-
-                # fig.canvas.draw()
-                # plt.cla()
+            current_state.change_from_chroma(C_mean, threshold=0.7, max_notes=4, v_opt=0)
+            
+            if count >= maxcount:
+                show_terminal_output(current_state)
+                graph_window.update_window_for_state()
                 count = 0
             else:
                 count = count + 1
-
 
             stream.write(data)
             
@@ -97,6 +75,12 @@ def analyze_audio_in(buffer_size=2048, sr=44100):
             p.terminate()
             print("process killed")
             quit()
+
+def show_terminal_output(current_state):
+    ng_fifths = pt_utils.c_chrom_to_f_circle(current_state.current_binary)
+    ng_kp = pt_keypattern.get_binary_KP(current_state.current_kpdve[0], current_state.current_kpdve[1])
+    print("Ob" + bin(ng_fifths)[2:].zfill(12) + "    " +   current_state.current_root_string() + " as " + current_state.current_function_string() + "|| Ob" + bin(ng_kp)[2:].zfill(12) + " of " + current_state.current_conv_tonic_string() + " " + current_state.current_conv_pattern_string())
+
 
 
 if __name__ == '__main__':
