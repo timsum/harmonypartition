@@ -97,6 +97,7 @@ def chroma_to_binary_value(chroma_stripe, threshold=0.5):
     notegroup = 0
     count = 0
     
+    ### THE ROOT OF THE THRESHOLD SEQUENCE...
     for a_val in chroma_stripe:
         if a_val > threshold :
             notegroup |= pt_utils.LEFT_BIT >> count
