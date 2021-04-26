@@ -559,6 +559,16 @@ def binary_notegroup_to_numpy_array(notegroup):
     return np_array
 
 
+def numpy_chrom_to_circle(a_chroma):
+    circle_a = np.array([a_chroma[(i*7)%12] for i in range(12)])
+    return np.roll(circle_a, 1)
+
+
+def numpy_circle_to_chrom(circle_a):
+    chrom_a = np.roll(circle_a, -1)
+    return np.array([chrom_a[(i*7)%12] for i in range(12)])
+
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
