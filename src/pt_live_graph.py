@@ -32,7 +32,7 @@ class live_harmony_graph():
         self.window = tkinter.Tk()
         self.window.wm_title("Representations of Harmonic Process")
 
-        self.fig, self.ax = plt.subplots(3, figsize=(12,3))
+        self.fig, self.ax = plt.subplots(4, figsize=(12,3))
 
         self.chr_img = self.ax[0].imshow(np.expand_dims(self.current_state.chroma_values, axis=0), vmin=0.0, vmax=1.0)
         self.ng_img = self.ax[1].imshow(self.heatmap_axis(pt_utils.c_chrom_to_f_circle(self.current_state.current_binary)))
@@ -60,6 +60,8 @@ class live_harmony_graph():
         expanded = np.expand_dims(np_notes, axis=0)
         
         return expanded
+    
+
 
         # return sb.heatmap(expanded,
         #        ax=self.ax[axis_num],

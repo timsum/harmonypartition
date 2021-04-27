@@ -36,12 +36,13 @@ def analyze_binary_input_for_closest_KPDVE(notegroup, kpdve, v_opt=0):
     
     '''
 
-    new_kpdve = pt_kpdve_list_optimize.closest_kpdve(analyze_binary_note_input(notegroup, v_opt=v_opt), kpdve)
+    return pt_kpdve_list_optimize.closest_kpdve(analyze_binary_note_input(notegroup, v_opt=v_opt), kpdve)
 
-    if np.array_equal(new_kpdve, pt_utils.MODVALS):
-        return kpdve
-    else:
-        return new_kpdve
+    # THIS IS VERY PROBLMATIC. WHAT TO DO WITH INVALID ENTRY...
+    # if np.array_equal(new_kpdve, pt_utils.MODVALS):
+    #     return kpdve
+    # else:
+    #     return new_kpdve
 
 def analyze_midi_note_input_for_closest_KPDVE(midinote_list, kpdve, v_opt=0):
     '''
@@ -170,6 +171,7 @@ def binary_pairing_for_note_input(notegroup):
     bin_kpdve = pt_utils.KPDVE_to_binary_encoding(analyze_binary_input_for_closest_KPDVE(notegroup))
     return pt_utils.binary_encoded_context_chord_pair(bin_kpdve, notegroup)
 
+
 def binary_pairing_for_KPDVE_input(kpdve):
     '''
 
@@ -189,7 +191,7 @@ def binary_pairing_for_KPDVE_input(kpdve):
     return pt_utils.binary_encoded_context_chord_pair(pt_utils.KPDVE_to_binary_encoding(kpdve), notegroup)
 
 # # # =============================================================================
-# ============= HELPER AND TEST============================
+# ============= HELPER AND TEST====================================================
 
 def opening_sample_list_analysis(notegroup_list, chomp_pct=10, sample_pct=10):
     '''
@@ -233,6 +235,7 @@ def opening_sample_list_analysis(notegroup_list, chomp_pct=10, sample_pct=10):
     
     return avg_kpdve.astype(int)
 
+
 def test_analysis():
     '''
 
@@ -242,7 +245,7 @@ def test_analysis():
 
     '''
 
-    for i in range(0b11111):
+    for i in range(0b1111111111):
         result = analyze_binary_input_for_closest_KPDVE(i, pt_utils.MODVALS)
         print(result)
         print("===")

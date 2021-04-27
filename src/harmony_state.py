@@ -32,9 +32,6 @@ class harmony_state():
         # BINARY (chromatic)
         self.current_binary = partita.chord_for_KPDVE_input(self.current_kpdve)
 
-        # KPDVE LIST
-        self.current_kpdve_list = partita.analyze_binary_note_input(self.current_binary)
-
         # PREVIOUS VALUES
         self.prev_kpdve = self.current_kpdve
         self.prev_binary = self.current_binary
@@ -69,7 +66,6 @@ class harmony_state():
         
         self.current_kpdve = new_kdpve
         self.current_binary = partita.chord_for_KPDVE_input(self.current_kpdve)
-        self.current_kpdve_list = partita.analyze_binary_note_input(self.current_binary)
         
         return True
 
@@ -93,15 +89,23 @@ class harmony_state():
         if (notegroup == self.current_binary):
             return False
         
-        if ((notegroup & self.current_binary) == notegroup): # NO CHANGE IN CHORD IS *NECESSARY*
-            self.current_binary = notegroup
-            return False
+        # if ((notegroup & self.current_binary) == notegroup): # NO CHANGE IN CHORD IS *NECESSARY*
+        #     self.current_binary = notegroup
+        #     return False
 
-        self.current_kpdve = partita.analyze_binary_input_for_closest_KPDVE(notegroup, self.current_kpdve)
-        self.current_binary = notegroup
-        self.current_kpdve_list = partita.analyze_binary_note_input(notegroup, v_opt=v_opt)
-        
-        return True
+        probe_kpdve = partita.analyze_binary_input_for_closest_KPDVE(notegroup, self.current_kpdve)
+        self.valid_state = (np.array_equal(probe_kpdve, pt_utils.MODVALS) == False)
+
+        if self.valid_state:
+            self.current_kpdve = np.copy(probe_kpdve)
+            self.current_binary = notegroup
+            ng_fifths = pt_utils.c_chrom_to_f_circle(self.current_binary)
+            ng_kp = pt_keypattern.get_binary_KP(self.current_kpdve[0], self.current_kpdve[1])
+            if (ng_fifths & ng_kp != ng_fifths):
+                print("mismatch in fifths/kp")
+            return True
+            
+        return False
 
 
     def change_from_midi(self, midi_list, v_opt=0):
@@ -145,10 +149,10 @@ class harmony_state():
             for an_idx in top_n:
                 sparse_chroma[an_idx] = chroma_array[an_idx]
             notegroup = pt_analyzeaudio.chroma_to_binary_value(sparse_chroma, threshold=threshold)
+            self.chroma_values = np.copy(sparse_chroma)
         else:
             notegroup = pt_analyzeaudio.chroma_to_binary_value(chroma_array, threshold=threshold)
-
-        self.chroma_values = np.copy(chroma_array)
+            self.chroma_values = np.copy(chroma_array)
 
         return self.change_notegroup(notegroup, v_opt=v_opt)
 
@@ -180,6 +184,9 @@ class harmony_state():
 
     def current_minimal_rep(self):
         return pt_utils.minimal_bin_kpdve(self.current_binary, self.current_kpdve)
+
+    def current_kpdve_list(self):
+        return partita.analyze_binary_note_input(self.current_binary)
 
     
     # RAW CHORDS/MODES WITH A DISPLACEMENT, TO INTERACT WITH SCALE/KEY-BASED ENVIRONMENTS (e.g. FoxDot)
@@ -227,8 +234,7 @@ class harmony_state():
     def current_chord_notes_string(self):
         return ' '.join(pt_naming_conventions.chord_note_names_for_KPDVE(self.current_kpdve))
     
-    
-    
+
     
     # --------------------------------------------------------------
     def string_description(self):
@@ -311,9 +317,7 @@ class harmony_state():
                 + "== locations in 7-note system: " 
                 + degrees_string
              )
-
-        
-        
+  
     
     # ------------------------------------------------------------------
     # STANDARD MANIPULATIONS FOR NAVIGATING THE STATE THROUGH PARAMETERS
