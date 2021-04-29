@@ -86,27 +86,37 @@ def ask_in_out_ports():
 def analyze_midi_piano_input():
     inport, outport = ask_in_out_ports()
 
-    print("heelllo?")
-
     p_classes = midi_note_pitchclass_collector()
     
-    current_state = harmony_state()
+    current_state = harmony_state() 
 
     msglog = deque()
     
     while True:
         msg = inport.receive()
 
+        print(msg)
         if (msg.type == "note_on"):
             if msg.velocity > 0:
                 p_classes.add_note(msg.note)
             else:
                 p_classes.remove_note(msg.note)
                 
+            print(msg.note)
+            print(p_classes.pclass_count)
+
             current_state.change_notegroup(p_classes.current_notegroup)
 
             msglog.append({"msg": msg, "due": time.time()})
-               
+
+        elif (msg.type == "note_off"):   
+            p_classes.remove_note(msg.note)
+                
+            print(msg.note)
+            print(p_classes.pclass_count)
+
+            current_state.change_notegroup(p_classes.current_notegroup)
+
         while len(msglog) > 0 and msglog[0]["due"] <= time.time():
             outport.send(msglog.popleft()["msg"])
 
