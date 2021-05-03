@@ -125,6 +125,36 @@ def f_circle_to_c_chrom(notegroup):
     '''
     return chrom_circle_switch(rotate_bits_left(notegroup, 1))
 
+
+# =============================================================================
+# pentatonic transform
+# =============================================================================
+
+def pentatonic_transform(notegroup):
+    '''
+
+    takes a notegroup (usually a kp filter for a mode) and transforms it to pentatonic
+
+    Parameters
+    ----------
+    notegroup : int
+         any int
+
+    Returns
+    -------
+    int
+         a twelve=bit pitch-class set
+
+    >>> pentatonic_transform(0b111111111111)
+    0
+
+    >>> pentatonic_transform(0b111111100000)
+    3968
+    '''
+    inverted = ~notegroup
+    print(inverted)
+    return rotate_bits_right(inverted, 5)
+
 # =============================================================================
 # bit conventions around 12
 # =============================================================================

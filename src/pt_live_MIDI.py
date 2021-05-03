@@ -20,6 +20,8 @@ import time
 import numpy as np
 import pt_utils
 
+import pt_live_graph
+
 
 class midi_note_pitchclass_collector():
     pclass_count = np.zeros(12, dtype=int)
@@ -89,39 +91,56 @@ def analyze_midi_piano_input():
     p_classes = midi_note_pitchclass_collector()
     
     current_state = harmony_state() 
+    graph_window = pt_live_graph.live_harmony_graph(current_state)
 
     msglog = deque()
     
     while True:
         msg = inport.receive()
 
-        print(msg)
+        change_harmony = False
+        print(msg) ### find out what sort of a thing this is...
+
         if (msg.type == "note_on"):
             if msg.velocity > 0:
                 p_classes.add_note(msg.note)
             else:
                 p_classes.remove_note(msg.note)
                 
-            print(msg.note)
             print(p_classes.pclass_count)
 
-            current_state.change_notegroup(p_classes.current_notegroup)
+            change_harmony = current_state.change_notegroup(p_classes.current_notegroup)
 
             msglog.append({"msg": msg, "due": time.time()})
 
+            print(current_state.current_root_string() + " as " + current_state.current_function_string() + " of " + current_state.current_conv_tonic_string() + " " + current_state.current_conv_pattern_string())
+
+
         elif (msg.type == "note_off"):   
             p_classes.remove_note(msg.note)
-                
-            print(msg.note)
             print(p_classes.pclass_count)
 
-            current_state.change_notegroup(p_classes.current_notegroup)
+            change_harmony = current_state.change_notegroup(p_classes.current_notegroup)
+
+        elif (msg.type == "control_change"):
+            if (msg.control == 1): # joystick:1
+                if(msg.value == 0):
+                    change_harmony = current_state.param_increment(1, 1)
+                elif (msg.value == 127):
+                    change_harmony = current_state.param_increment(1, -1)
+        
+        elif (msg.type == "pitchwheel"):
+            if msg.pitch == -8192:
+                change_harmony = current_state.param_increment(2, -1)
+            elif msg.pitch == 8191:
+                change_harmony = current_state.param_increment(2, 1)
 
         while len(msglog) > 0 and msglog[0]["due"] <= time.time():
             outport.send(msglog.popleft()["msg"])
 
-        print(current_state.current_root_string() + " as " + current_state.current_function_string() + " of " + current_state.current_conv_tonic_string() + " " + current_state.current_conv_pattern_string())
-        
+        if (change_harmony == True):
+            graph_window.update_window_for_state()
+
         time.sleep(0.001)
 
         

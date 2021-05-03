@@ -242,7 +242,7 @@ def raw_kp_voxel():
 
     return np.array([[k ^ p for p in patterns] for k in keys])
     
-
+# Main Call from Partita
 def get_KPDVE_list_for_notegroup(notegroup, v_opt=-1):
     '''
     
@@ -287,7 +287,8 @@ def get_KPDVE_list_for_notegroup(notegroup, v_opt=-1):
     return KP_list_to_KPDVE_list(kp_list, notegroup, v_opt)
 
 
-def get_KP_list_for_notegroup(notegroup):
+# THIS IS THE POINT WHERE THE PENTATONIC LIST HAS TO HAPPEN? 
+def get_KP_list_for_notegroup(notegroup, pentatonic=False):
     '''
 
     Parameters
@@ -314,6 +315,8 @@ def get_KP_list_for_notegroup(notegroup):
     for i in range(pt_utils.MODVALS[0]):
         for j in range(pt_utils.MODVALS[1]):
             kp_temp = get_binary_KP(i, j)
+            if pentatonic == True:
+                kp_temp = pt_utils.pentatonic_transform(kp_temp)
             if notegroup | kp_temp == kp_temp:
                 kp_list.append([i, j, 0, 0, 0])
       

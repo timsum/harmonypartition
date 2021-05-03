@@ -26,13 +26,15 @@ class harmony_state():
 
     def __init__(self, start_kpdve=np.array([0, 0, 0, 4, 3])):
         # KPDVE VAL & START (START DOES *NOT* CHANGE)
-        self.start_kpdve = start_kpdve
+        self.start_kpdve = start_kpdve # THIS NEVER CHANGES -- IT MAY TURN OUT TO BE USEFUL FOR ORIENTING TOWARD A TONALITY... SEEKING 'HOME'
+
+        # KPDVE (5-param Key, Pattern, Degree, Voicing, Extensions)
         self.current_kpdve = start_kpdve
 
         # BINARY (chromatic)
         self.current_binary = partita.chord_for_KPDVE_input(self.current_kpdve)
 
-        # PREVIOUS VALUES
+        # PREVIOUS VALUES -- THES REMAIN UNUSED...
         self.prev_kpdve = self.current_kpdve
         self.prev_binary = self.current_binary
 
